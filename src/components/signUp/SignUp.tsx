@@ -1,14 +1,17 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { NAME_STORAGE_KEY } from "@/features/onboarding/data"
 import { signUpSchema, type SignUpValues } from "@/schemas/signUpSchema"
 import { Button } from "@/components/common/button"
 import { Input } from "@/components/common/input"
 import { ArrowRightIcon } from "@/components/common/svg"
 
 function SignUp() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -16,8 +19,14 @@ function SignUp() {
   } = useForm<SignUpValues>({ resolver: zodResolver(signUpSchema) })
 
   const onSubmit = (values: SignUpValues) => {
-    // No auth backend yet.
-    console.log(values)
+    // No auth backend yet. The name carries into onboarding so the coach
+    // opens with "Welcome back" instead of asking for it again.
+    try {
+      window.localStorage.setItem(NAME_STORAGE_KEY, values.firstName)
+    } catch {
+      /* storage unavailable — onboarding will ask for the name */
+    }
+    router.push("/onboarding")
   }
 
   return (

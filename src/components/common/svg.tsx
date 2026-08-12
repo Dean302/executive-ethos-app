@@ -42,6 +42,21 @@ function ArrowRightIcon(props: React.ComponentProps<typeof Icon>) {
   )
 }
 
+function ArrowUpIcon(props: React.ComponentProps<typeof Icon>) {
+  return (
+    <Icon
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M12 19V5" />
+      <path d="m5 12 7-7 7 7" />
+    </Icon>
+  )
+}
+
 /** Google's mark — a fixed third-party brand asset, deliberately not themed. */
 function GoogleIcon(props: React.ComponentProps<typeof Icon>) {
   return (
@@ -66,4 +81,4 @@ function GoogleIcon(props: React.ComponentProps<typeof Icon>) {
   )
 }
 
-export { Icon, ArrowRightIcon, GoogleIcon }
+export { Icon, ArrowRightIcon, ArrowUpIcon, GoogleIcon }

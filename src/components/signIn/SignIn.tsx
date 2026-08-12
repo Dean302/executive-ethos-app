@@ -9,7 +9,17 @@ import { Button } from "@/components/common/button"
 import { Input } from "@/components/common/input"
 import { ArrowRightIcon } from "@/components/common/svg"
 
-function SignIn() {
+/**
+ * `onSuccess` takes over from the default redirect, and `showHeading` is
+ * turned off when the surrounding surface already has a title (a modal).
+ */
+function SignIn({
+  showHeading = true,
+  onSuccess,
+}: {
+  showHeading?: boolean
+  onSuccess?: () => void
+} = {}) {
   const router = useRouter()
   const {
     register,
@@ -19,17 +29,22 @@ function SignIn() {
 
   const onSubmit = () => {
     // No auth backend yet — send the user straight through.
-    router.push("/dashboard")
+    if (onSuccess) onSuccess()
+    else router.push("/dashboard")
   }
 
   return (
     <div>
-      <h1 className="mb-1.5 text-[28px] leading-tight font-bold tracking-[-0.02em]">
-        Welcome back
-      </h1>
-      <p className="text-muted-foreground mb-8 text-sm">
-        Sign in to continue your coaching profile.
-      </p>
+      {showHeading && (
+        <>
+          <h1 className="mb-1.5 text-[28px] leading-tight font-bold tracking-[-0.02em]">
+            Welcome back
+          </h1>
+          <p className="text-muted-foreground mb-8 text-sm">
+            Sign in to continue your coaching profile.
+          </p>
+        </>
+      )}
 
       <form
         onSubmit={handleSubmit(onSubmit)}

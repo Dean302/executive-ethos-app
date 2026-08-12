@@ -65,6 +65,7 @@
   --cream-08: rgb(var(--cream-rgb) / 0.08);
 
   /* Gold alpha ramp — accents, never body text (2.1:1 on cream) */
+  --gold-45: rgb(var(--gold-rgb) / 0.45);
   --gold-30: rgb(var(--gold-rgb) / 0.3);
   --gold-20: rgb(var(--gold-rgb) / 0.2);
   --gold-16: rgb(var(--gold-rgb) / 0.16);
