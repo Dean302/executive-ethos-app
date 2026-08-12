@@ -1,27 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-sans",
+// Inter is the only loaded face. Display type is Georgia, a system serif —
+// see --font-serif in globals.css. Both mirror ethos-design.
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-display",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
-  title: "Executive Ethos — Arriving 2026",
+  title: "The Executive Ethos",
   description:
-    "An operating standard for how leaders decide, communicate, and hold their line. Request early access.",
+    "AI-powered executive communication coaching. Honest feedback, a measurable baseline, and a 1:1 human coach.",
 };
 
 export default function RootLayout({
@@ -30,11 +21,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-[#0A0C11]">{children}</body>
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+      <body className="min-h-full bg-background text-foreground">
+        {children}
+      </body>
     </html>
   );
 }
