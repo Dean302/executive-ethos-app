@@ -5,15 +5,14 @@ import { useRouter } from "next/navigation"
 
 import { monthlyRate, type PlanId, type TermDays } from "@/lib/pricing"
 
+import { withProgram } from "../programParams"
+
 import { startProgram } from "./actions"
 import { ChangeProgramDialog } from "./ChangeProgramDialog"
 import { PaymentForm, type PaymentMethod } from "./PaymentForm"
 import { PaymentStatus } from "./PaymentStatus"
 import { ProgramBanner } from "./ProgramBanner"
 
-// The design continues to the onboarding welcome step, which isn't built
-// yet; until it is, a paid lead lands on the dashboard.
-const NEXT_STEP = "/dashboard"
 // The processing state shows for at least this long, so a fast response
 // doesn't flash past and the payment still reads as happening.
 const MIN_PROCESSING_MS = 1600
@@ -41,9 +40,10 @@ function PaymentScreen({ initialPlanId, initialTermDays }: PaymentScreenProps) {
 
   React.useEffect(() => {
     if (status !== "success") return
-    const timer = window.setTimeout(() => router.push(NEXT_STEP), CONFIRMATION_MS)
+    const next = withProgram("/onboarding/welcome", planId, termDays)
+    const timer = window.setTimeout(() => router.push(next), CONFIRMATION_MS)
     return () => window.clearTimeout(timer)
-  }, [status, router])
+  }, [status, router, planId, termDays])
 
   const pay = async (paymentMethod: PaymentMethod) => {
     setError(null)

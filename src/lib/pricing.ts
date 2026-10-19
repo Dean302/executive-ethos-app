@@ -17,6 +17,16 @@ export type Commitment = {
   text: string
 }
 
+/** A standing coaching session: same weekday and time for the whole term. */
+export type StandingSession = {
+  key: "primary" | "secondary"
+  label: string
+  /** Days between occurrences — a multiple of 7, so the weekday holds. */
+  intervalDays: 7 | 14 | 28
+  /** For copy: "weekly", "biweekly", "monthly". */
+  cadence: string
+}
+
 export type Plan = {
   id: PlanId
   tagline: string
@@ -26,6 +36,8 @@ export type Plan = {
   hoursPerMonth: number
   /** Monthly rate on the 90-day term, before any discount. */
   baseMonthly: number
+  /** One for Foundation; an individual and a shared one above that. */
+  sessions: StandingSession[]
   commitments: Commitment[]
   additionalSeatNote: string
 }
@@ -47,6 +59,9 @@ export const PLANS: Record<PlanId, Plan> = {
     leaderCount: 1,
     hoursPerMonth: 3,
     baseMonthly: 2500,
+    sessions: [
+      { key: "primary", label: "1:1 Executive Coaching", intervalDays: 28, cadence: "monthly" },
+    ],
     commitments: [
       {
         frequency: "MONTHLY",
@@ -75,6 +90,10 @@ export const PLANS: Record<PlanId, Plan> = {
     leaderCount: 2,
     hoursPerMonth: 10,
     baseMonthly: 5000,
+    sessions: [
+      { key: "primary", label: "1:1 Executive Coaching", intervalDays: 14, cadence: "biweekly" },
+      { key: "secondary", label: "Paired Coaching Session", intervalDays: 28, cadence: "monthly" },
+    ],
     commitments: [
       {
         frequency: "BIWEEKLY",
@@ -111,6 +130,10 @@ export const PLANS: Record<PlanId, Plan> = {
     leaderCount: 4,
     hoursPerMonth: 17,
     baseMonthly: 10000,
+    sessions: [
+      { key: "primary", label: "Leadership Team Session", intervalDays: 7, cadence: "weekly" },
+      { key: "secondary", label: "1:1 Executive Coaching", intervalDays: 28, cadence: "monthly" },
+    ],
     commitments: [
       {
         frequency: "WEEKLY",
