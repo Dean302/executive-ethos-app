@@ -11,6 +11,8 @@ type OnboardingShellProps = {
   wide?: boolean
   /** Where this step sits in the onboarding sequence. */
   progress?: { step: number; total: number }
+  /** Full-width content in place of the logo header. */
+  banner?: React.ReactNode
   children: React.ReactNode
 }
 
@@ -18,23 +20,25 @@ type OnboardingShellProps = {
  * Focus frame for onboarding steps: no app navigation, just the logo (and
  * a way back) above one centred column.
  */
-function OnboardingShell({ backHref, wide = false, progress, children }: OnboardingShellProps) {
+function OnboardingShell({ backHref, wide = false, progress, banner, children }: OnboardingShellProps) {
   return (
     <div className="bg-background flex min-h-dvh flex-col overflow-x-clip">
-      <header className="flex items-center justify-between px-5 py-4 sm:px-8">
-        <div className="flex items-center gap-4">
-          {backHref && (
-            <Link
-              href={backHref}
-              className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
-            >
-              <ArrowLeft aria-hidden className="size-4" strokeWidth={1.75} />
-              Back
-            </Link>
-          )}
-          <Logo height={24} />
-        </div>
-      </header>
+      {banner ?? (
+        <header className="flex items-center justify-between px-5 py-4 sm:px-8">
+          <div className="flex items-center gap-4">
+            {backHref && (
+              <Link
+                href={backHref}
+                className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
+              >
+                <ArrowLeft aria-hidden className="size-4" strokeWidth={1.75} />
+                Back
+              </Link>
+            )}
+            <Logo height={24} />
+          </div>
+        </header>
+      )}
 
       {progress && (
         <div
