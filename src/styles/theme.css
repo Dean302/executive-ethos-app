@@ -1,0 +1,120 @@
+/* ------------------------------------------------------------------ */
+/*  3. TAILWIND THEME                                                  */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-raised: var(--primary-raised);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-on-dark: var(--muted-on-dark);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-surface-hover: var(--surface-hover);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-on-dark: var(--success-on-dark);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-on-dark: var(--destructive-on-dark);
+  --color-border: var(--border);
+  --color-line: var(--line);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* A light fill from the primary's own family, for header rows and
+     quiet cells in place of neutral grey. Opaque, so sticky cells can
+     use it. */
+  --color-tint: color-mix(in srgb, var(--primary) 10%, var(--brand-white));
+  --color-tint-soft: color-mix(in srgb, var(--primary) 5%, var(--brand-white));
+
+  /* Secondary palette, for the selective uses the guidelines allow. */
+  --color-oxblood: var(--brand-oxblood);
+  --color-metal: var(--brand-metal);
+  --color-bronze: var(--brand-bronze);
+  --color-slate: var(--brand-slate);
+  --color-mist: var(--brand-mist);
+  --color-ash: var(--brand-ash);
+
+  /* Tones: bg-tone-sage-soft, bg-tone-sage-muted, bg-tone-sage,
+     text-tone-sage-ink, and the same for slate, blush and cream. */
+  --color-tone-sage-soft: var(--tone-sage-soft);
+  --color-tone-sage-muted: var(--tone-sage-muted);
+  --color-tone-sage: var(--tone-sage-strong);
+  --color-tone-sage-ink: var(--tone-sage-ink);
+  --color-tone-slate-soft: var(--tone-slate-soft);
+  --color-tone-slate-muted: var(--tone-slate-muted);
+  --color-tone-slate: var(--tone-slate-strong);
+  --color-tone-slate-ink: var(--tone-slate-ink);
+  --color-tone-blush-soft: var(--tone-blush-soft);
+  --color-tone-blush-muted: var(--tone-blush-muted);
+  --color-tone-blush: var(--tone-blush-strong);
+  --color-tone-blush-ink: var(--tone-blush-ink);
+  --color-tone-cream-soft: var(--tone-cream-soft);
+  --color-tone-cream-muted: var(--tone-cream-muted);
+  --color-tone-cream: var(--tone-cream-strong);
+  --color-tone-cream-ink: var(--tone-cream-ink);
+
+  --color-navy-deep: var(--navy-deep);
+  --color-gold-light: var(--gold-light);
+
+  --color-glimpse-track-sage: var(--glimpse-track-sage);
+  --color-glimpse-track-slate: var(--glimpse-track-slate);
+  --color-glimpse-track-blush: var(--glimpse-track-blush);
+  --color-glimpse-chip-sage: var(--glimpse-chip-sage);
+  --color-glimpse-chip-blush: var(--glimpse-chip-blush);
+  --color-glimpse-gain: var(--glimpse-gain);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Controls (buttons, inputs, chips) */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /* Surfaces that hold information, by nesting depth */
+  --radius-container: 32px; /* page-level cards and sections */
+  --radius-panel: 24px; /* stat tiles, option cards, callouts */
+  --radius-inset: 16px; /* boxes and rows nested inside a container */
+
+  /* Shadows — only for elements that float: the navy icon badge, and
+     product illustrations over photography. */
+  --shadow-badge: 0 6px 16px -6px color-mix(in srgb, var(--primary) 50%, transparent);
+  --shadow-float: 0 30px 60px -20px color-mix(in srgb, var(--navy-shadow) 55%, transparent);
+  --shadow-float-note: 0 18px 40px -14px color-mix(in srgb, var(--navy-shadow) 60%, transparent);
+
+  /* Faces are loaded by next/font in app/layout.tsx.
+     sans       Funnel Sans — body and UI
+     heading    Funnel Sans at regular weight — what the design renders
+                (its "light" headings fall back to 400). The guidelines name
+                Newsreader for headlines; the design moved headings to
+                Funnel Sans and kept Newsreader for one signature moment.
+     identifier Funnel Display — labels, eyebrows, metadata. Natural
+                case; the design dropped the guidelines' uppercase.
+     signature  Newsreader italic — sparingly, one moment per screen. */
+  --font-sans: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-identifier: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
+  --font-signature: var(--font-newsreader), Georgia, serif;
+  /* Symbols Funnel Sans doesn't carry (→, ←): the system face, as the
+     design renders them, not the metric-matched Arial next/font inserts
+     as a fallback. */
+  --font-symbol: ui-sans-serif, system-ui, sans-serif;
+}

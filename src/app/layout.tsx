@@ -3,7 +3,7 @@ import { Funnel_Display, Funnel_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 
 // Brand faces, self-hosted by next/font and exposed as CSS variables that
-// globals.css maps to font-sans/heading, font-identifier and font-signature.
+// src/styles/theme.css maps to font-sans/heading, font-identifier and font-signature.
 const funnelSans = Funnel_Sans({
   variable: "--font-funnel-sans",
   subsets: ["latin"],

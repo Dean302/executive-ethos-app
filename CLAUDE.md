@@ -2,17 +2,35 @@
 
 # Project Rules
 - Always use reusable UI components — build shared components in `src/components/common` and reuse them; do not duplicate one-off UI.
-- **Never write a raw color** (`#hex`, `rgb()`, `rgba()`) in a component, className, or SVG attribute. Use a theme token. If the role you need has no token, add one to `globals.css` rather than inlining a value.
+- **Never write a raw color** (`#hex`, `rgb()`, `rgba()`) in a component, className, or SVG attribute. Use a theme token. If the role you need has no token, add one to `src/styles/tokens.css` rather than inlining a value.
 
 # Theming
 
 Source of truth: the brand guidelines `EE_BrandGuidelines_260909_R2.pdf` (House of Kin), as applied in the design prototype `../executive-ethos-latest-design/web`. Follow the prototype's intended design, not its code.
 
-All theming lives in `src/app/globals.css`, in three layers. Always change things at the lowest layer that can express the change.
+Global CSS is plain CSS (Tailwind v4 doesn't support Sass), split by concern and imported from `src/app/globals.css`:
+
+| File | Holds |
+|---|---|
+| `src/styles/tokens.css` | Layers 1–2: primitives and semantic tokens |
+| `src/styles/theme.css` | Layer 3: the `@theme` mapping to Tailwind utilities |
+| `src/styles/utilities.css` | Custom `@utility` classes (brand gradients, `scrollbar-none`) |
+| `src/styles/animations.css` | `@keyframes` and the utilities that run them |
+| `src/styles/base.css` | `@layer base` element defaults |
+
+Theming works in three layers. Always change things at the lowest layer that can express the change.
 
 1. **Primitives** — the raw palette. Primary: Navy `#121F2F`, Gold `#CCA869`, Cream `#F2EFEB`. Secondary: Oxblood, Metal, Bronze, Slate, Mist, Ash. The guidelines' product UI tokens (Navy Raised, Navy Hover, Gold Hover, Cream Hover, Line, Input), plus functional values the guidelines don't cover (gold ink, neutral border, status colours). A rebrand touches only this block.
 2. **Semantics** — role tokens (`--background`, `--primary`, `--accent`, `--accent-text`, `--muted-foreground`, `--muted-on-dark`, `--border`, `--line`, `--ring`, status colours…). Light only: the guidelines define no dark scheme, so there is no `.dark` block. `dark:` is pinned to a `.dark` class nothing sets.
 3. **`@theme inline`** — exposes the tokens to Tailwind as utilities. Component code only ever touches this layer.
+
+## Colour schemes
+Product areas can re-skin. The default scheme is navy; Leadership OS (Phase 2) will be oxblood. A scheme overrides only the tokens in `tokens.css` §2a — `--primary`, `--primary-foreground`, `--primary-raised`, `--primary-hover`, `--primary-glow` — in a `[data-scheme="<name>"]` block, set on `<html>` while that area is open (so portalled dialogs follow) or on a container. Focus rings, tints, badge shadows, primary banners and the first chart series derive from these and follow automatically. Gold stays the accent; body text stays navy; status colours don't change.
+
+So that screens re-skin without edits:
+- App chrome (sidebar, headers, banners, primary buttons, selected states) uses the primary family: `bg-primary`, `bg-primary-raised`, `hover:bg-primary-hover`, `text-primary-foreground`, `bg-tint`, `bg-gradient-navy-slate`. Never a navy-specific token or primitive (`--brand-navy`, `bg-navy-deep`) for something that should follow the scheme.
+- The auth screens' deep-navy photo wash is brand, not scheme: it stays navy.
+- Reference for Phase 2 (from the prototype, not yet in code): oxblood `#5A2A2E`, raised `#6A3539`, hover `#64303A`, glow = oxblood mixed 55% into cream. Re-check gold-on-primary contrast when adding it.
 
 ## Colour rules
 - **Gold belongs on navy surfaces.** On cream or white, gold is only a fill or a rule paired with navy text — never text (1.95:1 on cream). Gold text on a light ground uses `text-accent-text` (4.70:1). Plain `text-accent` is for navy surfaces (7.4:1).
@@ -55,7 +73,7 @@ Considered, direct, warm, confident, literate — "the way a confident executive
 - **TypeScript 5** — strict, `@/*` import alias → `src/`
 
 ## Styling
-- **Tailwind CSS v4** — configured via `@tailwindcss/postcss` (no `tailwind.config.js`; theme in `src/app/globals.css`)
+- **Tailwind CSS v4** — configured via `@tailwindcss/postcss` (no `tailwind.config.js`; theme in `src/styles/`, imported by `src/app/globals.css`)
 - **tw-animate-css** — animation utilities
 - **clsx** + **tailwind-merge** — class composition (`cn()` in `src/lib/utils.ts`)
 
@@ -72,7 +90,7 @@ Considered, direct, warm, confident, literate — "the way a confident executive
 ## Project Structure
 ```
 src/
-  app/                  # App Router routes, layouts, globals.css
+  app/                  # App Router routes, layouts, globals.css (imports src/styles)
     (auth)/             # auth routes only; the UI lives in components/auth
   components/
     common/             # shared UI primitives (shadcn target)
