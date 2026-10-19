@@ -5,11 +5,9 @@ import { redirect } from "next/navigation"
 import { PLANS } from "@/lib/pricing"
 import { scheduleSchema } from "@/schemas/scheduleSchema"
 
-import { getCoachAvailability } from "./coachAvailability"
+import { withProgram } from "../programParams"
 
-// The design continues to the self-assessment, which isn't built yet;
-// until it is, a scheduled lead lands on the dashboard.
-const NEXT_STEP = "/dashboard"
+import { getCoachAvailability } from "./coachAvailability"
 
 export type SaveScheduleResult = { error: string }
 
@@ -23,7 +21,7 @@ export async function saveSchedule(input: unknown): Promise<SaveScheduleResult> 
     return { error: "Choose a day and time for each session." }
   }
 
-  const { planId, slots } = parsed.data
+  const { planId, termDays, slots } = parsed.data
   const availability = await getCoachAvailability()
 
   for (const session of PLANS[planId].sessions) {
@@ -39,5 +37,5 @@ export async function saveSchedule(input: unknown): Promise<SaveScheduleResult> 
   // No calendar is connected yet, so nothing is booked. When one is,
   // reserve each standing slot on the coach's calendar for the program's
   // term here, then save them against the lead's program.
-  redirect(NEXT_STEP)
+  redirect(withProgram("/onboarding/self-assessment", planId, termDays))
 }

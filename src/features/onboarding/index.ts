@@ -1,4 +1,5 @@
 export { OnboardingShell } from "./OnboardingShell"
 export { PaymentScreen } from "./payment/PaymentScreen"
 export { ScheduleScreen } from "./schedule/ScheduleScreen"
+export { ProfileIntake } from "./self-assessment/ProfileIntake"
 export { WelcomeScreen } from "./welcome/WelcomeScreen"
