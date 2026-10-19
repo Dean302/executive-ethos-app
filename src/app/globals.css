@@ -2,252 +2,27 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* `dark:` applies inside a .dark document, but NOT inside a subtree that
-   has opted back into the light scheme via .light. Without the guard the
-   variant is purely selector-based and would keep firing in .light
-   subtrees even though their tokens are light. */
-@custom-variant dark (&:is(.dark *):not(:is(.light, .light *)));
+/* The theme and global styles, one concern per file in src/styles. */
+@import "../styles/tokens.css";
+@import "../styles/theme.css";
+@import "../styles/utilities.css";
+@import "../styles/animations.css";
+@import "../styles/base.css";
+
+/* The product is light-only: the brand guidelines define no dark scheme.
+   Pinning `dark:` to a .dark class (which nothing sets) stops the
+   shadcn primitives' dark: styles from firing on OS dark mode. */
+@custom-variant dark (&:is(.dark *));
 
 /* ================================================================== */
 /*  THEME — three layers. Change things at the lowest layer possible.  */
 /*                                                                     */
-/*  1. PRIMITIVES  raw brand palette. Rebrand = edit this block only.  */
-/*  2. SEMANTICS   role tokens (:root = light, .dark = dark). Retheme  */
-/*                 = remap these to different primitives.              */
-/*  3. @theme      exposes semantics to Tailwind utilities.            */
+/*  1. PRIMITIVES  raw palette. Rebrand = edit this block only.        */
+/*  2. SEMANTICS   role tokens components are styled with.             */
+/*  3. @theme      exposes tokens to Tailwind utilities.               */
 /*                                                                     */
 /*  Never write a raw hex/rgba in a component — reach for a semantic   */
 /*  token, and add one here if the role you need doesn't exist yet.    */
-/*  Source of truth: ../ethos-design (Executive Ethos design system).  */
+/*  Source of truth: EE_BrandGuidelines_260909_R2 (House of Kin), as   */
+/*  applied in the executive-ethos-latest-design prototype.            */
 /* ================================================================== */
-
-/* ------------------------------------------------------------------ */
-/*  1. PRIMITIVES — brand palette                                      */
-/* ------------------------------------------------------------------ */
-:root {
-  /* Channel triples are the single source of truth so the alpha ramps
-     below stay in sync with the solid colors automatically. */
-  --navy-rgb: 19 36 63; /* #13243f */
-  --gold-rgb: 201 164 73; /* #c9a449 */
-  --cream-rgb: 245 239 226; /* #f5efe2 */
-
-  --brand-navy: rgb(var(--navy-rgb));
-  --brand-gold: rgb(var(--gold-rgb));
-  --brand-cream: rgb(var(--cream-rgb));
-
-  /* Cream surface steps (light scheme) */
-  --brand-cream-raised: #faf6ee;
-  --brand-cream-deep: #ede4d0;
-  --brand-white: #ffffff;
-
-  /* Navy surface steps (dark scheme + ambient light) */
-  --brand-navy-deep: #08101c;
-  --brand-navy-surface: #0e1a2d;
-  --brand-navy-tint: #3f5b80;
-
-  /* Status */
-  --brand-success: #4a9e6b;
-  --brand-danger: #e05252;
-
-  /* Navy alpha ramp — ink on cream */
-  --navy-92: rgb(var(--navy-rgb) / 0.92);
-  --navy-72: rgb(var(--navy-rgb) / 0.72);
-  --navy-55: rgb(var(--navy-rgb) / 0.55); /* borders/icons only — 3.5:1, fails AA as text */
-  --navy-32: rgb(var(--navy-rgb) / 0.32);
-  --navy-14: rgb(var(--navy-rgb) / 0.14);
-  --navy-08: rgb(var(--navy-rgb) / 0.08);
-  --navy-04: rgb(var(--navy-rgb) / 0.04);
-
-  /* Cream alpha ramp — ink on navy */
-  --cream-72: rgb(var(--cream-rgb) / 0.72);
-  --cream-32: rgb(var(--cream-rgb) / 0.32);
-  --cream-14: rgb(var(--cream-rgb) / 0.14);
-  --cream-08: rgb(var(--cream-rgb) / 0.08);
-
-  /* Gold alpha ramp — accents, never body text (2.1:1 on cream) */
-  --gold-30: rgb(var(--gold-rgb) / 0.3);
-  --gold-20: rgb(var(--gold-rgb) / 0.2);
-  --gold-16: rgb(var(--gold-rgb) / 0.16);
-  --gold-10: rgb(var(--gold-rgb) / 0.1);
-  --gold-00: rgb(var(--gold-rgb) / 0);
-
-  /* Type stacks. Inter is loaded by next/font in app/layout.tsx as
-     --font-inter; Georgia is a system face, matching ethos-design.
-     Named --type-* rather than --font-* so the @theme mapping below is
-     not self-referential. */
-  --type-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --type-serif: Georgia, "Times New Roman", serif;
-
-  /* Radius base — matches ethos-design. The scale is derived in @theme. */
-  --radius: 0.625rem;
-}
-
-/* ------------------------------------------------------------------ */
-/*  2a. SEMANTICS — light (the design system's native scheme)          */
-/*  `.light` lets a subtree opt back into this scheme inside a dark    */
-/*  document (and vice versa), e.g. the auth screens.                  */
-/* ------------------------------------------------------------------ */
-:root,
-.light {
-  --background: var(--brand-cream);
-  --foreground: var(--brand-navy);
-
-  --card: var(--brand-cream-raised);
-  --card-foreground: var(--brand-navy);
-  --popover: var(--brand-white);
-  --popover-foreground: var(--brand-navy);
-
-  --primary: var(--brand-navy);
-  --primary-foreground: var(--brand-cream);
-  --secondary: var(--brand-cream-deep);
-  --secondary-foreground: var(--brand-navy);
-
-  --muted: var(--brand-cream-deep);
-  /* 0.72, not the design system's 0.55 — PRODUCT.md flags 0.55 as an
-     accessibility risk and it measures 3.5:1 on cream. This is 5.8:1. */
-  --muted-foreground: var(--navy-72);
-
-  --accent: var(--brand-gold);
-  --accent-foreground: var(--brand-navy);
-
-  --success: var(--brand-success);
-  --success-foreground: var(--brand-white);
-  --destructive: var(--brand-danger);
-  --destructive-foreground: var(--brand-white);
-
-  --border: var(--navy-14);
-  --border-strong: var(--navy-32);
-  --input: var(--navy-14);
-  --ring: var(--brand-gold);
-
-  --chart-1: var(--brand-gold);
-  --chart-2: var(--brand-navy);
-  --chart-3: var(--brand-navy-tint);
-  --chart-4: #8a6f2e;
-  --chart-5: #6b7a8f;
-
-  --sidebar: var(--brand-cream-raised);
-  --sidebar-foreground: var(--brand-navy);
-  --sidebar-primary: var(--brand-navy);
-  --sidebar-primary-foreground: var(--brand-cream);
-  --sidebar-accent: var(--brand-cream-deep);
-  --sidebar-accent-foreground: var(--brand-navy);
-  --sidebar-border: var(--navy-14);
-  --sidebar-ring: var(--brand-gold);
-}
-
-/* ------------------------------------------------------------------ */
-/*  2b. SEMANTICS — dark (navy-derived)                                */
-/* ------------------------------------------------------------------ */
-.dark {
-  --background: var(--brand-navy-deep);
-  --foreground: var(--brand-cream);
-
-  --card: var(--brand-navy-surface);
-  --card-foreground: var(--brand-cream);
-  --popover: var(--brand-navy-surface);
-  --popover-foreground: var(--brand-cream);
-
-  --primary: var(--brand-cream);
-  --primary-foreground: var(--brand-navy-deep);
-  --secondary: var(--brand-navy);
-  --secondary-foreground: var(--brand-cream);
-
-  --muted: var(--brand-navy);
-  --muted-foreground: var(--cream-72); /* 8.9:1 on --background */
-
-  --accent: var(--brand-gold);
-  --accent-foreground: var(--brand-navy-deep);
-
-  --success: var(--brand-success);
-  --success-foreground: var(--brand-navy-deep);
-  --destructive: var(--brand-danger);
-  --destructive-foreground: var(--brand-navy-deep);
-
-  --border: var(--cream-14);
-  --border-strong: var(--cream-32);
-  --input: var(--cream-14);
-  --ring: var(--brand-gold);
-
-  --chart-1: var(--brand-gold);
-  --chart-2: var(--brand-cream);
-  --chart-3: var(--brand-navy-tint);
-  --chart-4: #d8bd7e;
-  --chart-5: #6b7a8f;
-
-  --sidebar: var(--brand-navy-surface);
-  --sidebar-foreground: var(--brand-cream);
-  --sidebar-primary: var(--brand-gold);
-  --sidebar-primary-foreground: var(--brand-navy-deep);
-  --sidebar-accent: var(--brand-navy);
-  --sidebar-accent-foreground: var(--brand-cream);
-  --sidebar-border: var(--cream-14);
-  --sidebar-ring: var(--brand-gold);
-}
-
-/* ------------------------------------------------------------------ */
-/*  3. TAILWIND THEME — semantics as utilities                         */
-/* ------------------------------------------------------------------ */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-border-strong: var(--border-strong);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --font-sans: var(--type-sans);
-  --font-serif: var(--type-serif);
-  --font-heading: var(--type-serif);
-
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
-}

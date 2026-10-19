@@ -2,21 +2,68 @@
 
 # Project Rules
 - Always use reusable UI components — build shared components in `src/components/common` and reuse them; do not duplicate one-off UI.
-- **Never write a raw color** (`#hex`, `rgb()`, `rgba()`) in a component, className, or SVG attribute. Use a theme token. If the role you need has no token, add one to `globals.css` rather than inlining a value.
+- **Never write a raw color** (`#hex`, `rgb()`, `rgba()`) in a component, className, or SVG attribute. Use a theme token. If the role you need has no token, add one to `src/styles/tokens.css` rather than inlining a value.
 
 # Theming
 
-All theming lives in `src/app/globals.css`, in three layers. Always change things at the lowest layer that can express the change.
+Source of truth: the brand guidelines `EE_BrandGuidelines_260909_R2.pdf` (House of Kin), as applied in the design prototype `../executive-ethos-latest-design/web`. Follow the prototype's intended design, not its code.
 
-1. **Primitives** — the raw Executive Ethos palette (`--brand-navy` `#13243f`, `--brand-gold` `#c9a449`, `--brand-cream` `#f5efe2`, the surface steps, and the navy/cream/gold alpha ramps). Alpha ramps derive from `--navy-rgb` / `--gold-rgb` / `--cream-rgb` channel triples, so changing a brand color is a **one-line edit**. A rebrand touches only this block.
-2. **Semantics** — role tokens (`--background`, `--foreground`, `--primary`, `--accent`, `--muted-foreground`, `--border`, `--ring`, …) defined twice: `:root` = light cream/navy scheme, `.dark` = navy scheme. Re-theming without changing the brand means remapping these to different primitives.
-3. **`@theme inline`** — exposes the semantic tokens to Tailwind as utilities (`bg-background`, `text-muted-foreground`, `border-border`, `font-serif`, …). Component code only ever touches this layer.
+Global CSS is plain CSS (Tailwind v4 doesn't support Sass), split by concern and imported from `src/app/globals.css`:
 
-Notes:
-- **Scheme switching**: the app renders light by default. Add `dark` to `<html>` in `app/layout.tsx` for the whole app, or a `light`/`dark` class on any element to switch just that subtree.
-- **Type**: Inter (loaded by `next/font` as `--font-inter`, exposed as `--type-sans`/`font-sans`) for everything UI; Georgia (`--type-serif`/`font-serif`) for display and italic emphasis only. There is no mono face. Theme keys are named `--type-*` so the `@theme` mapping is not self-referential.
-- **Gold is an accent, never body text** — it measures 2.1:1 on cream. `--muted-foreground` uses navy at 0.72 (5.8:1), not the design system's 0.55 (3.5:1), which `ethos-design/PRODUCT.md` flags as an accessibility risk. Hold new tokens to WCAG 2.1 AA.
-- Source of truth for the design system is the sibling repo `../ethos-design` (see its `PRODUCT.md` for brand principles: restraint, no gradients/shadows/glassmorphism, hierarchy via weight and scale).
+| File | Holds |
+|---|---|
+| `src/styles/tokens.css` | Layers 1–2: primitives and semantic tokens |
+| `src/styles/theme.css` | Layer 3: the `@theme` mapping to Tailwind utilities |
+| `src/styles/utilities.css` | Custom `@utility` classes (brand gradients, `scrollbar-none`) |
+| `src/styles/animations.css` | `@keyframes` and the utilities that run them |
+| `src/styles/base.css` | `@layer base` element defaults |
+
+Theming works in three layers. Always change things at the lowest layer that can express the change.
+
+1. **Primitives** — the raw palette. Primary: Navy `#121F2F`, Gold `#CCA869`, Cream `#F2EFEB`. Secondary: Oxblood, Metal, Bronze, Slate, Mist, Ash. The guidelines' product UI tokens (Navy Raised, Navy Hover, Gold Hover, Cream Hover, Line, Input), plus functional values the guidelines don't cover (gold ink, neutral border, status colours). A rebrand touches only this block.
+2. **Semantics** — role tokens (`--background`, `--primary`, `--accent`, `--accent-text`, `--muted-foreground`, `--muted-on-dark`, `--border`, `--line`, `--ring`, status colours…). Light only: the guidelines define no dark scheme, so there is no `.dark` block. `dark:` is pinned to a `.dark` class nothing sets.
+3. **`@theme inline`** — exposes the tokens to Tailwind as utilities. Component code only ever touches this layer.
+
+## Colour schemes
+Product areas can re-skin. The default scheme is navy; Leadership OS (Phase 2) will be oxblood. A scheme overrides only the tokens in `tokens.css` §2a — `--primary`, `--primary-foreground`, `--primary-raised`, `--primary-hover`, `--primary-glow` — in a `[data-scheme="<name>"]` block, set on `<html>` while that area is open (so portalled dialogs follow) or on a container. Focus rings, tints, badge shadows, primary banners and the first chart series derive from these and follow automatically. Gold stays the accent; body text stays navy; status colours don't change.
+
+So that screens re-skin without edits:
+- App chrome (sidebar, headers, banners, primary buttons, selected states) uses the primary family: `bg-primary`, `bg-primary-raised`, `hover:bg-primary-hover`, `text-primary-foreground`, `bg-tint`, `bg-gradient-navy-slate`. Never a navy-specific token or primitive (`--brand-navy`, `bg-navy-deep`) for something that should follow the scheme.
+- The auth screens' deep-navy photo wash is brand, not scheme: it stays navy.
+- Reference for Phase 2 (from the prototype, not yet in code): oxblood `#5A2A2E`, raised `#6A3539`, hover `#64303A`, glow = oxblood mixed 55% into cream. Re-check gold-on-primary contrast when adding it.
+
+## Colour rules
+- **Gold belongs on navy surfaces.** On cream or white, gold is only a fill or a rule paired with navy text — never text (1.95:1 on cream). Gold text on a light ground uses `text-accent-text` (4.70:1). Plain `text-accent` is for navy surfaces (7.4:1).
+- Focus rings are navy (`--ring`), not gold.
+- `text-muted-foreground` (Slate) passes AA on cream and white but not on `bg-muted`. Don't pair them.
+- On navy surfaces use `text-muted-on-dark` (Mist), `text-success-on-dark` and `text-destructive-on-dark` for secondary and status text.
+- `border-border` frames surfaces; `border-line` divides rows inside them.
+- `bg-tint` / `bg-tint-soft` are light navy fills for header rows, quiet cells and selected states.
+- Status colours (`success`, `warning`, `destructive`) are used sparingly, never as the main palette.
+- Tones (`sage`, `slate`, `blush`, `cream`) tell sections, tiles and statuses apart: `bg-tone-<name>-soft` for bands and tracks, `bg-tone-<name>-muted` for chips, `bg-tone-<name>` for bars (non-text), `text-tone-<name>-ink` for text on any of them.
+- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. No shadows or glass effects on UI chrome; the only exception is product illustrations floating over photography (`components/auth/ProductGlimpse`).
+- Hold every new token to WCAG 2.1 AA.
+
+## Type
+Faces are loaded by `next/font` in `app/layout.tsx`.
+- `font-sans` — Funnel Sans: body and UI.
+- `font-heading` — Funnel Sans at regular weight. `h1`–`h6` get it (and `font-normal`) from the base layer. The prototype's code says `font-light`, but it never loads weight 300, so its headings render at 400 — match what renders. The guidelines name Newsreader for headlines; the design deliberately moved headings to Funnel Sans.
+- `font-identifier` — Funnel Display: labels, eyebrows, metadata. Natural case; no uppercase tracking.
+- `font-signature` — Newsreader italic: one signature moment per screen at most.
+
+## Shape
+- Controls (buttons, inputs, chips): `rounded-sm`…`rounded-xl` off `--radius` (8px).
+- Surfaces, by nesting depth: `rounded-container` (32px, page-level cards), `rounded-panel` (24px, tiles, option cards, dialogs), `rounded-inset` (16px, boxes inside a container).
+
+## Brand assets
+Icons and the brand mark live in `components/common/svg.tsx`. It holds icons and logos only — charts and illustrations stay with the component that draws them.
+
+- `<Logo surface="light" | "dark" />` (`components/common/logo`) — the official horizontal lockup files in `public/brand`, used unmodified. The guidelines forbid recolouring, re-spacing or adding effects to the logo.
+- `<BrandMark variant="filled" | "outline" />` (`components/common/svg.tsx`) — the icon in `currentColor`. Filled when it stands alone; outline only beside the wordmark. Gold on navy, navy on cream.
+- `app/icon.svg` — the favicon, from the official gold icon.
+
+## Voice
+Considered, direct, warm, confident, literate — "the way a confident executive speaks: measured, plain, precise."
 
 # Tech Stack
 
@@ -26,7 +73,7 @@ Notes:
 - **TypeScript 5** — strict, `@/*` import alias → `src/`
 
 ## Styling
-- **Tailwind CSS v4** — configured via `@tailwindcss/postcss` (no `tailwind.config.js`; theme in `src/app/globals.css`)
+- **Tailwind CSS v4** — configured via `@tailwindcss/postcss` (no `tailwind.config.js`; theme in `src/styles/`, imported by `src/app/globals.css`)
 - **tw-animate-css** — animation utilities
 - **clsx** + **tailwind-merge** — class composition (`cn()` in `src/lib/utils.ts`)
 
@@ -43,9 +90,20 @@ Notes:
 ## Project Structure
 ```
 src/
-  app/                  # App Router routes, layouts, globals.css
+  app/                  # App Router routes, layouts, globals.css (imports src/styles)
+    (auth)/             # auth routes only; the UI lives in components/auth
   components/
-    common/             # shared UI components (shadcn target)
+    common/             # shared UI primitives (shadcn target)
+    auth/               # everything auth: layout, brand panel, forms, server actions
+    <name>/             # other shared components (header, sidebar)
+  features/
+    onboarding/         # onboarding steps (OnboardingShell frame, payment, …)
+  schemas/              # zod schemas shared by client forms and server actions
   lib/
     utils.ts            # cn() helper
 ```
+
+Server actions re-validate their input with the same zod schema the form uses; the client check is for UX, not security.
+
+- **Card data never reaches our server.** Payment actions take only the program choice and compute amounts from `lib/pricing.ts`; card fields are stand-ins for the payment processor's hosted fields.
+- **JSX gotcha:** this compiler drops the space between an expression and a following HTML entity (`{amount} &amp; start` renders "$2,500& start"). Write such text as one template string: ``{`Pay ${amount} & start`}``.

@@ -1,0 +1,179 @@
+/* Design tokens: layers 1 and 2 of the theme (see globals.css), with
+   the colour scheme a product area can re-skin (2a).
+   Never write a raw hex/rgba in a component — reach for a semantic
+   token, and add one here if the role you need doesn't exist yet. */
+
+/* ------------------------------------------------------------------ */
+/*  1. PRIMITIVES                                                      */
+/* ------------------------------------------------------------------ */
+:root {
+  /* Primary palette */
+  --brand-navy: #121f2f;
+  --brand-gold: #cca869;
+  --brand-cream: #f2efeb;
+
+  /* Secondary palette — used selectively for contrast and depth */
+  --brand-oxblood: #5a2a2e;
+  --brand-metal: #30383c;
+  --brand-bronze: #7a5c25;
+  --brand-slate: #5a6a91;
+  --brand-mist: #b8c4cf;
+  --brand-ash: #e5e5e5;
+
+  /* Product UI tokens — named in the guidelines, never used in
+     marketing, always a step off a brand colour. */
+  --brand-navy-raised: #1a2a3d;
+  --brand-navy-hover: #1c2c40;
+  --brand-gold-hover: #d6b67a;
+  --brand-cream-hover: #fbfaf8;
+  --brand-line: #d9d3ca;
+  --brand-white: #ffffff;
+
+  /* Not in the guidelines — functional values the product needs. */
+  /* Gold darkened for text on light grounds: brand gold is 1.95:1 on
+     cream; this is 4.70:1 on cream, 5.39:1 on white. */
+  --gold-ink: #85652d;
+  /* Neutral rule for structural chrome (card and panel edges). */
+  --neutral-border: #eeeeee;
+  /* Navy steps below the brand navy, for washes over photography and
+     the colour of floating shadows. */
+  --navy-deep: #0e1724;
+  --navy-shadow: #080e18;
+  /* A lighter gold for small labels on deep navy glass. */
+  --gold-light: #d9bc85;
+  /* Status. All pass AA as text on cream and white. */
+  --status-success: #3f7350;
+  --status-warning: #9a5d28;
+  --status-danger: #a63d2e;
+  --status-on-color: #fafaf8;
+  /* Status text on navy surfaces (~7:1 and ~4.9:1 on navy). */
+  --status-success-on-dark: #7fb48c;
+  --status-danger-on-dark: #d9695a;
+
+  /* Tones — soft tints that tell sections, tiles and statuses apart
+     without leaning on the status colours. Each has four steps:
+       soft    section bands, bar tracks
+       muted   chips, step markers
+       strong  bars and fills (non-text)
+       ink     text on any of the above (all ≥ 5.3:1 on muted) */
+  --tone-sage-soft: #eff4f0;
+  --tone-sage-muted: #e4ede6;
+  --tone-sage-strong: #6e9e7e;
+  --tone-sage-ink: #3a6149;
+  --tone-slate-soft: #f1f3f8;
+  --tone-slate-muted: #e6e9f2;
+  --tone-slate-strong: #7f8db0;
+  --tone-slate-ink: #3e4e73;
+  --tone-blush-soft: #fbf1ef;
+  --tone-blush-muted: #f5e4e0;
+  --tone-blush-strong: #c77f7e;
+  --tone-blush-ink: #7e3d41;
+  --tone-cream-soft: #fbf7f1;
+  --tone-cream-muted: #e9dcc4;
+  --tone-cream-strong: var(--brand-gold);
+  --tone-cream-ink: #6b5428;
+
+  /* Illustration-only values for the product glimpse (sample data in a
+     decorative, aria-hidden picture of the product). Not for UI text. */
+  --glimpse-track-sage: #eaf1ec;
+  --glimpse-track-slate: #eceff5;
+  --glimpse-track-blush: #f7ecea;
+  --glimpse-chip-sage: #4f7f60;
+  --glimpse-chip-blush: #9a5154;
+  --glimpse-gain: #3e7a55;
+  --glimpse-ring-start: #9aa6c4;
+
+  /* Third-party marks — card networks' own colours, fixed by their
+     owners. Simplified marks, not official artwork: swap in the
+     networks' licensed assets before launch. */
+  --mark-visa: #1a1f71;
+  --mark-mastercard-red: #eb001b;
+  --mark-mastercard-orange: #f79e1b;
+  --mark-amex: #2e77bc;
+  --mark-discover: #ff6000;
+  --mark-unionpay-red: #e21836;
+  --mark-unionpay-blue: #00447c;
+  --mark-unionpay-green: #00963f;
+}
+
+/* ------------------------------------------------------------------ */
+/*  2a. COLOUR SCHEME                                                  */
+/*                                                                     */
+/*  The one colour family a product area can re-skin. Everything built  */
+/*  on these (sidebar, banners, buttons, focus rings, tints, badge      */
+/*  shadows, the first chart series) follows; gold stays the accent,    */
+/*  text stays navy, status colours stay put.                           */
+/*                                                                     */
+/*  Default: navy. To add a scheme, override every token below in a     */
+/*  [data-scheme="<name>"] block, and set data-scheme on <html> while   */
+/*  that area is open (so portalled dialogs follow) or on a container.  */
+/*  Check gold on the new primary still passes AA.                      */
+/* ------------------------------------------------------------------ */
+:root {
+  --primary: var(--brand-navy);
+  --primary-foreground: var(--brand-cream);
+  /* A step lighter, for cards on a primary surface. */
+  --primary-raised: var(--brand-navy-raised);
+  --primary-hover: var(--brand-navy-hover);
+  /* The light rising from the corner of primary banners. */
+  --primary-glow: var(--brand-slate);
+}
+
+/* ------------------------------------------------------------------ */
+/*  2b. SEMANTICS                                                      */
+/* ------------------------------------------------------------------ */
+:root {
+  --background: var(--brand-cream);
+  --foreground: var(--brand-navy);
+
+  --card: var(--brand-white);
+  --card-foreground: var(--brand-navy);
+  --popover: var(--brand-white);
+  --popover-foreground: var(--brand-navy);
+
+  --secondary: var(--brand-ash);
+  --secondary-foreground: var(--brand-navy);
+
+  --muted: var(--brand-ash);
+  /* Slate: 4.69:1 on cream, 5.38:1 on white. Only 4.27:1 on --muted,
+     so don't set muted text on a muted fill. */
+  --muted-foreground: var(--brand-slate);
+  /* Secondary text on navy surfaces (9.4:1). */
+  --muted-on-dark: var(--brand-mist);
+
+  /* Gold belongs on navy surfaces. On light grounds use it only as a
+     fill or rule paired with navy text; gold *text* there must use
+     --accent-text. */
+  --accent: var(--brand-gold);
+  --accent-foreground: var(--brand-navy);
+  --accent-hover: var(--brand-gold-hover);
+  --accent-text: var(--gold-ink);
+
+  --surface-hover: var(--brand-cream-hover);
+
+  --success: var(--status-success);
+  --success-foreground: var(--status-on-color);
+  --success-on-dark: var(--status-success-on-dark);
+  --warning: var(--status-warning);
+  --warning-foreground: var(--status-on-color);
+  --destructive: var(--status-danger);
+  --destructive-foreground: var(--status-on-color);
+  --destructive-on-dark: var(--status-danger-on-dark);
+
+  /* --border frames surfaces; --line divides rows within them. */
+  --border: var(--neutral-border);
+  --line: var(--brand-line);
+  --input: var(--brand-ash);
+  /* The scheme's primary, not gold: gold rings would put gold on cream
+     on every focusable control. */
+  --ring: var(--primary);
+
+  --chart-1: var(--primary);
+  --chart-2: var(--brand-gold);
+  --chart-3: var(--brand-slate);
+  --chart-4: var(--brand-mist);
+  --chart-5: var(--brand-metal);
+
+  /* Control radius; the container scale lives in @theme. */
+  --radius: 0.5rem;
+}

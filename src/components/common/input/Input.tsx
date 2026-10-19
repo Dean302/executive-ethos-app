@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Eye, EyeOff } from "lucide-react"
+import { AlertCircle, Eye, EyeOff } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -13,11 +13,12 @@ const inputVariants = cva(
     variants: {
       variant: {
         default:
-          "h-8 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        // Tall form field — ethos-design's 48px control: 1.5px rule,
-        // raised cream fill, gold on focus.
+          "h-8 rounded-lg border border-input bg-card px-2.5 py-1 text-base file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        // Tall form field — the 44px control the screens use. 15px text
+        // on small screens, 14px from md up. Invalid fields get a red rule;
+        // focused, the navy border stays and the ring turns red.
         field:
-          "h-12 rounded-[10px] border-[1.5px] border-input bg-card px-4 text-sm focus-visible:border-ring focus-visible:bg-popover aria-invalid:border-destructive",
+          "h-11 rounded-lg border border-input bg-card px-2.5 text-[15px] md:text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:focus-visible:border-ring aria-invalid:focus-visible:ring-destructive/40",
       },
     },
     defaultVariants: {
@@ -30,6 +31,12 @@ type InputProps = React.ComponentProps<"input"> &
   VariantProps<typeof inputVariants> & {
     /** Renders an associated <label> above the control. */
     label?: React.ReactNode
+    /** Keep the label for assistive technology but hide it visually. */
+    hideLabel?: boolean
+    /** Content at the far end of the label row, e.g. accepted-card marks. */
+    labelAddon?: React.ReactNode
+    /** Decorative icon inside the control's trailing edge. */
+    endIcon?: React.ReactNode
     /** Content below the control — helper text, strength meter. */
     hint?: React.ReactNode
     /** Validation message. Renders below the control and marks the input invalid. */
@@ -54,6 +61,9 @@ function Input({
   type,
   variant,
   label,
+  hideLabel = false,
+  labelAddon,
+  endIcon,
   hint,
   error,
   revealToggle = true,
@@ -72,7 +82,12 @@ function Input({
       data-slot="input"
       aria-invalid={error ? true : undefined}
       aria-describedby={error ? `${inputId}-error` : undefined}
-      className={cn(inputVariants({ variant }), hasToggle && "pr-12", className)}
+      className={cn(
+        inputVariants({ variant }),
+        hasToggle && "pr-9",
+        endIcon && "pr-10",
+        className
+      )}
       {...props}
     />
   )
@@ -86,13 +101,39 @@ function Input({
         aria-label={revealed ? "Hide password" : "Show password"}
         aria-pressed={revealed}
         aria-controls={inputId}
-        className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 absolute top-1/2 right-3.5 flex -translate-y-1/2 cursor-pointer rounded-sm transition-colors outline-none focus-visible:ring-3"
+        className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 absolute top-1/2 right-3 flex -translate-y-1/2 cursor-pointer rounded-sm transition-colors outline-none focus-visible:ring-3"
       >
-        {revealed ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+        {revealed ? (
+          <EyeOff className="size-4" strokeWidth={1.75} />
+        ) : (
+          <Eye className="size-4" strokeWidth={1.75} />
+        )}
       </button>
+    </div>
+  ) : endIcon ? (
+    <div className="relative">
+      {control}
+      <span
+        aria-hidden
+        className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 flex -translate-y-1/2"
+      >
+        {endIcon}
+      </span>
     </div>
   ) : (
     control
+  )
+
+  const labelElement = label && (
+    <label
+      htmlFor={inputId}
+      className={cn(
+        "text-muted-foreground text-sm font-medium",
+        hideLabel ? "sr-only" : !labelAddon && "mb-1.5"
+      )}
+    >
+      {label}
+    </label>
   )
 
   // Bare control when there's nothing to wrap — keeps the input itself the
@@ -101,17 +142,21 @@ function Input({
 
   return (
     <div className={cn("flex flex-col", wrapperClassName)}>
-      {label && (
-        <label
-          htmlFor={inputId}
-          className="text-muted-foreground mb-2 text-[11px] font-semibold tracking-[0.1em] uppercase"
-        >
-          {label}
-        </label>
+      {labelAddon && !hideLabel ? (
+        <div className="mb-1.5 flex items-center justify-between gap-3">
+          {labelElement}
+          {labelAddon}
+        </div>
+      ) : (
+        labelElement
       )}
       {field}
       {error ? (
-        <p id={`${inputId}-error`} className="text-destructive mt-1.5 text-xs">
+        <p
+          id={`${inputId}-error`}
+          className="text-destructive mt-1.5 flex items-center gap-1.5 text-sm"
+        >
+          <AlertCircle aria-hidden className="size-3.5 shrink-0" strokeWidth={1.75} />
           {error}
         </p>
       ) : (

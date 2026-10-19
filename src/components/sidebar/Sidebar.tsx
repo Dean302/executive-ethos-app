@@ -12,7 +12,7 @@ import {
   User,
 } from "lucide-react"
 
-import { BrandMark } from "@/components/common/brandMark"
+import { Logo } from "@/components/common/logo"
 import { cn } from "@/lib/utils"
 
 const NAV_ITEMS = [
@@ -41,9 +41,8 @@ function Sidebar() {
         )}
       >
         {!collapsed && (
-          <Link href="/dashboard" className="flex min-w-0 items-center gap-3">
-            <BrandMark tone="inverse">E</BrandMark>
-            <span className="truncate font-semibold">The Executive Ethos</span>
+          <Link href="/dashboard" className="flex min-w-0 items-center">
+            <Logo surface="dark" height={24} />
           </Link>
         )}
         <button
