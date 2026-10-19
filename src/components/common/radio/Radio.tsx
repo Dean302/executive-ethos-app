@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const radioVariants = cva(
-  "border-border hover:border-accent focus-visible:ring-ring/50 data-[checked]:border-accent data-[checked]:bg-accent/10 cursor-pointer border transition-colors outline-none focus-visible:ring-3",
+  "border-border bg-card hover:border-line focus-visible:ring-ring/50 data-[checked]:border-primary data-[checked]:bg-tint cursor-pointer border transition-colors outline-none focus-visible:ring-3",
   {
     variants: {
       variant: {

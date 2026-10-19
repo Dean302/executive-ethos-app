@@ -69,7 +69,7 @@ function Textarea({
           onClick={onSend}
           disabled={empty}
           aria-label={sendLabel}
-          className="bg-foreground/10 text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring/50 flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-foreground/10 disabled:hover:text-muted-foreground"
+          className="bg-foreground/10 text-muted-foreground hover:bg-primary hover:text-primary-foreground focus-visible:ring-ring/50 flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors outline-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-foreground/10 disabled:hover:text-muted-foreground"
         >
           <ArrowUpIcon size={18} />
         </button>

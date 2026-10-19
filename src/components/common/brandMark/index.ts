@@ -1,1 +1,1 @@
-export { BrandMark, brandMarkVariants } from "./BrandMark"
+export { BrandMark } from "./BrandMark"

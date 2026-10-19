@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import { BrandMark } from "@/components/common/brandMark"
 import { Button } from "@/components/common/button"
+import { Logo } from "@/components/common/logo"
 import { GoogleIcon } from "@/components/common/svg"
 import { SignIn } from "@/components/signIn"
 import { SignUp } from "@/components/signUp"
@@ -30,16 +31,10 @@ function AuthLayout({ defaultMode = "signup" }: { defaultMode?: Mode }) {
     <div className="bg-background text-foreground flex min-h-dvh">
       {/* Branding */}
       <aside className="bg-primary text-primary-foreground relative hidden w-[44%] shrink-0 flex-col overflow-hidden p-12 lg:flex">
-        <span
-          aria-hidden
-          className="text-accent/[0.06] pointer-events-none absolute -right-20 -bottom-16 font-serif text-[380px] leading-none font-bold select-none"
-        >
-          Θ
-        </span>
+        <BrandMark className="text-accent pointer-events-none absolute -right-20 -bottom-16 size-[380px] opacity-[0.06]" />
 
-        <div className="relative mb-auto flex items-center gap-3">
-          <BrandMark tone="inverse" />
-          <span className="text-[15px] font-semibold">The Executive Ethos</span>
+        <div className="relative mb-auto">
+          <Logo surface="dark" height={28} preload />
         </div>
 
         <div className="relative mb-auto">

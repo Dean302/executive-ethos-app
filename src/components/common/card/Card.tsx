@@ -39,9 +39,9 @@ function Card({
     <Component
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground border-border rounded-2xl border p-5",
+        "bg-card text-card-foreground border-border rounded-container border p-6",
         Component === "button" &&
-          "hover:border-border-strong focus-visible:ring-ring/50 cursor-pointer text-left transition-colors outline-none focus-visible:ring-3",
+          "hover:border-line focus-visible:ring-ring/50 cursor-pointer text-left transition-colors outline-none focus-visible:ring-3",
         className
       )}
       {...props}
@@ -50,10 +50,10 @@ function Card({
         <div className="mb-4 flex items-start justify-between gap-4">
           <div className="min-w-0">
             {title && (
-              <h3 className="truncate text-sm font-semibold">{title}</h3>
+              <h3 className="truncate text-base leading-snug">{title}</h3>
             )}
             {description && (
-              <p className="text-muted-foreground mt-1 text-[13px] leading-[18px]">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {description}
               </p>
             )}

@@ -6,17 +6,43 @@
 
 # Theming
 
+Source of truth: the brand guidelines `EE_BrandGuidelines_260909_R2.pdf` (House of Kin), as applied in the design prototype `../executive-ethos-latest-design/web`. Follow the prototype's intended design, not its code.
+
 All theming lives in `src/app/globals.css`, in three layers. Always change things at the lowest layer that can express the change.
 
-1. **Primitives** — the raw Executive Ethos palette (`--brand-navy` `#13243f`, `--brand-gold` `#c9a449`, `--brand-cream` `#f5efe2`, the surface steps, and the navy/cream/gold alpha ramps). Alpha ramps derive from `--navy-rgb` / `--gold-rgb` / `--cream-rgb` channel triples, so changing a brand color is a **one-line edit**. A rebrand touches only this block.
-2. **Semantics** — role tokens (`--background`, `--foreground`, `--primary`, `--accent`, `--muted-foreground`, `--border`, `--ring`, …) defined twice: `:root` = light cream/navy scheme, `.dark` = navy scheme. Re-theming without changing the brand means remapping these to different primitives.
-3. **`@theme inline`** — exposes the semantic tokens to Tailwind as utilities (`bg-background`, `text-muted-foreground`, `border-border`, `font-serif`, …). Component code only ever touches this layer.
+1. **Primitives** — the raw palette. Primary: Navy `#121F2F`, Gold `#CCA869`, Cream `#F2EFEB`. Secondary: Oxblood, Metal, Bronze, Slate, Mist, Ash. The guidelines' product UI tokens (Navy Raised, Navy Hover, Gold Hover, Cream Hover, Line, Input), plus functional values the guidelines don't cover (gold ink, neutral border, status colours). A rebrand touches only this block.
+2. **Semantics** — role tokens (`--background`, `--primary`, `--accent`, `--accent-text`, `--muted-foreground`, `--muted-on-dark`, `--border`, `--line`, `--ring`, status colours…). Light only: the guidelines define no dark scheme, so there is no `.dark` block. `dark:` is pinned to a `.dark` class nothing sets.
+3. **`@theme inline`** — exposes the tokens to Tailwind as utilities. Component code only ever touches this layer.
 
-Notes:
-- **Scheme switching**: the app renders light by default. Add `dark` to `<html>` in `app/layout.tsx` for the whole app, or a `light`/`dark` class on any element to switch just that subtree.
-- **Type**: Inter (loaded by `next/font` as `--font-inter`, exposed as `--type-sans`/`font-sans`) for everything UI; Georgia (`--type-serif`/`font-serif`) for display and italic emphasis only. There is no mono face. Theme keys are named `--type-*` so the `@theme` mapping is not self-referential.
-- **Gold is an accent, never body text** — it measures 2.1:1 on cream. `--muted-foreground` uses navy at 0.72 (5.8:1), not the design system's 0.55 (3.5:1), which `ethos-design/PRODUCT.md` flags as an accessibility risk. Hold new tokens to WCAG 2.1 AA.
-- Source of truth for the design system is the sibling repo `../ethos-design` (see its `PRODUCT.md` for brand principles: restraint, no gradients/shadows/glassmorphism, hierarchy via weight and scale).
+## Colour rules
+- **Gold belongs on navy surfaces.** On cream or white, gold is only a fill or a rule paired with navy text — never text (1.95:1 on cream). Gold text on a light ground uses `text-accent-text` (4.70:1). Plain `text-accent` is for navy surfaces (7.4:1).
+- Focus rings are navy (`--ring`), not gold.
+- `text-muted-foreground` (Slate) passes AA on cream and white but not on `bg-muted`. Don't pair them.
+- On navy surfaces use `text-muted-on-dark` (Mist), `text-success-on-dark` and `text-destructive-on-dark` for secondary and status text.
+- `border-border` frames surfaces; `border-line` divides rows inside them.
+- `bg-tint` / `bg-tint-soft` are light navy fills for header rows, quiet cells and selected states.
+- Status colours (`success`, `warning`, `destructive`) are used sparingly, never as the main palette.
+- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. No shadows or glassmorphism.
+- Hold every new token to WCAG 2.1 AA.
+
+## Type
+Faces are loaded by `next/font` in `app/layout.tsx`.
+- `font-sans` — Funnel Sans: body and UI.
+- `font-heading` — Funnel Sans at light weight. `h1`–`h6` get it (and `font-light`) from the base layer. The guidelines name Newsreader for headlines; the design deliberately moved headings to Funnel Sans.
+- `font-identifier` — Funnel Display: labels, eyebrows, metadata. Natural case; no uppercase tracking.
+- `font-signature` — Newsreader italic: one signature moment per screen at most.
+
+## Shape
+- Controls (buttons, inputs, chips): `rounded-sm`…`rounded-xl` off `--radius` (8px).
+- Surfaces, by nesting depth: `rounded-container` (32px, page-level cards), `rounded-panel` (24px, tiles, option cards, dialogs), `rounded-inset` (16px, boxes inside a container).
+
+## Brand assets
+- `<Logo surface="light" | "dark" />` (`components/common/logo`) — the official horizontal lockup files in `public/brand`, used unmodified. The guidelines forbid recolouring, re-spacing or adding effects to the logo.
+- `<BrandMark variant="filled" | "outline" />` (`components/common/brandMark`) — the icon in `currentColor`. Filled when it stands alone; outline only beside the wordmark. Gold on navy, navy on cream.
+- `app/icon.svg` — the favicon, from the official gold icon.
+
+## Voice
+Considered, direct, warm, confident, literate — "the way a confident executive speaks: measured, plain, precise."
 
 # Tech Stack
 

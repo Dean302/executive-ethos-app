@@ -14,10 +14,9 @@ const inputVariants = cva(
       variant: {
         default:
           "h-8 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:bg-input/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
-        // Tall form field — ethos-design's 48px control: 1.5px rule,
-        // raised cream fill, gold on focus.
+        // Tall form field — the 44px control the screens use.
         field:
-          "h-12 rounded-[10px] border-[1.5px] border-input bg-card px-4 text-sm focus-visible:border-ring focus-visible:bg-popover aria-invalid:border-destructive",
+          "h-11 rounded-lg border border-input bg-card px-3.5 text-[15px] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20",
       },
     },
     defaultVariants: {
@@ -104,7 +103,7 @@ function Input({
       {label && (
         <label
           htmlFor={inputId}
-          className="text-muted-foreground mb-2 text-[11px] font-semibold tracking-[0.1em] uppercase"
+          className="font-identifier text-muted-foreground mb-2 text-sm"
         >
           {label}
         </label>
