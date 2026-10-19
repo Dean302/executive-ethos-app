@@ -292,6 +292,10 @@
   --font-heading: var(--font-sans);
   --font-identifier: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
   --font-signature: var(--font-newsreader), Georgia, serif;
+  /* Symbols Funnel Sans doesn't carry (→, ←): the system face, as the
+     design renders them, not the metric-matched Arial next/font inserts
+     as a fallback. */
+  --font-symbol: ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ------------------------------------------------------------------ */

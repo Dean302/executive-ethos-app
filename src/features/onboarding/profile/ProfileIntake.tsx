@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { unstable_rethrow } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { AlertCircle, ArrowLeft, ArrowRight, Check, UserRound } from "lucide-react"
 
 import { Button, buttonVariants } from "@/components/common/button"
@@ -42,13 +42,16 @@ type ProfileIntakeProps = {
   person?: { name: string; firstName: string; initials: string }
   /** Where Back goes from the first question. */
   backHref: string
+  /** The self-assessment, once the profile is saved. */
+  nextHref: string
 }
 
 /**
  * Role → why → focus, before the self-assessment. The navy profile card
  * fills in as each answer lands; it is this phase's progress indicator.
  */
-function ProfileIntake({ person, backHref }: ProfileIntakeProps) {
+function ProfileIntake({ person, backHref, nextHref }: ProfileIntakeProps) {
+  const router = useRouter()
   const [step, setStep] = React.useState(0)
   const [role, setRole] = React.useState<Role | null>(null)
   const [why, setWhy] = React.useState("")
@@ -81,11 +84,10 @@ function ProfileIntake({ person, backHref }: ProfileIntakeProps) {
     setError(null)
     startTransition(async () => {
       try {
-        // Returns a result only on failure; success redirects.
         const result = await saveExecutiveProfile({ role, why, focus })
-        if (result?.error) setError(result.error)
-      } catch (err) {
-        unstable_rethrow(err)
+        if ("error" in result) setError(result.error)
+        else router.push(nextHref)
+      } catch {
         setError("We couldn't save your profile. Check your connection and try again.")
       }
     })

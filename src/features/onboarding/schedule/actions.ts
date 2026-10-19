@@ -37,5 +37,5 @@ export async function saveSchedule(input: unknown): Promise<SaveScheduleResult> 
   // No calendar is connected yet, so nothing is booked. When one is,
   // reserve each standing slot on the coach's calendar for the program's
   // term here, then save them against the lead's program.
-  redirect(withProgram("/onboarding/self-assessment", planId, termDays))
+  redirect(withProgram("/onboarding/profile", planId, termDays))
 }
