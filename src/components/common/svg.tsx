@@ -108,4 +108,98 @@ function BrandMark({
   )
 }
 
-export { Icon, ArrowUpIcon, BrandMark }
+/**
+ * Branded loading state: a faint ring with a segment travelling round it
+ * and the glyph breathing at the centre. Still under reduced motion.
+ *
+ *   <LogoLoader className="text-primary size-16" label="Processing your payment" />
+ */
+function LogoLoader({ className, label = "Loading" }: { className?: string; label?: string }) {
+  return (
+    <span role="status" aria-label={label} className={cn("inline-flex size-12 shrink-0", className)}>
+      <svg viewBox={VIEWBOX} aria-hidden className="size-full overflow-visible">
+        <circle {...RING} fill="none" stroke="currentColor" opacity={0.16} />
+        <circle
+          {...RING}
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          pathLength={100}
+          className="logo-loader-arc"
+        />
+        <path d={GLYPH} fill="currentColor" className="logo-loader-glyph" />
+      </svg>
+    </span>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  Card networks — simplified marks in the networks' own colours      */
+/* ------------------------------------------------------------------ */
+
+const CARD_MARK = { width: 32, height: 20, viewBox: "0 0 32 20" }
+
+function CardWordmark({ fill, text, fontSize }: { fill: string; text: string; fontSize: number }) {
+  return (
+    <svg {...CARD_MARK} aria-hidden>
+      <rect width="32" height="20" rx="3" fill={fill} />
+      <text
+        x="16"
+        y="10.5"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize={fontSize}
+        fontWeight="700"
+        letterSpacing="-0.025em"
+        fill="var(--brand-white)"
+      >
+        {text}
+      </text>
+    </svg>
+  )
+}
+
+function MastercardMark() {
+  return (
+    <svg {...CARD_MARK} aria-hidden>
+      <rect x="0.5" y="0.5" width="31" height="19" rx="2.5" fill="var(--brand-white)" stroke="var(--border)" />
+      <circle cx="13" cy="10" r="6" fill="var(--mark-mastercard-red)" />
+      <circle cx="19" cy="10" r="6" fill="var(--mark-mastercard-orange)" style={{ mixBlendMode: "multiply" }} />
+    </svg>
+  )
+}
+
+function UnionPayMark() {
+  const clipId = React.useId()
+  return (
+    <svg {...CARD_MARK} aria-hidden>
+      <clipPath id={clipId}>
+        <rect width="32" height="20" rx="3" />
+      </clipPath>
+      <g clipPath={`url(#${clipId})`}>
+        <rect width="10.67" height="20" fill="var(--mark-unionpay-red)" />
+        <rect x="10.67" width="10.67" height="20" fill="var(--mark-unionpay-blue)" />
+        <rect x="21.33" width="10.67" height="20" fill="var(--mark-unionpay-green)" />
+      </g>
+    </svg>
+  )
+}
+
+/** The card networks the payment form accepts. */
+function CardBrandIcons({ className }: { className?: string }) {
+  return (
+    <div
+      role="img"
+      aria-label="Accepted cards: Visa, Mastercard, American Express, Discover, UnionPay"
+      className={cn("flex items-center gap-1", className)}
+    >
+      <CardWordmark fill="var(--mark-visa)" text="VISA" fontSize={8} />
+      <MastercardMark />
+      <CardWordmark fill="var(--mark-amex)" text="AMEX" fontSize={7} />
+      <CardWordmark fill="var(--mark-discover)" text="DISC" fontSize={7} />
+      <UnionPayMark />
+    </div>
+  )
+}
+
+export { Icon, ArrowUpIcon, BrandMark, LogoLoader, CardBrandIcons }

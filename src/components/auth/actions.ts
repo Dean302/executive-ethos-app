@@ -41,10 +41,9 @@ export async function setPassword(input: unknown): Promise<AuthActionResult> {
   }
 
   // No identity provider is connected yet, so no account is created. When
-  // one is, create the account for the confirmed invite here. The design
-  // continues to onboarding (payment) next; that screen isn't built yet,
-  // so this lands on the dashboard for now.
-  redirect("/dashboard")
+  // one is, create the account for the confirmed invite here, and carry the
+  // invite's plan and term on to payment as ?plan=…&term=….
+  redirect("/onboarding/payment")
 }
 
 /**

@@ -78,10 +78,14 @@ src/
     common/             # shared UI primitives (shadcn target)
     auth/               # everything auth: layout, brand panel, forms, server actions
     <name>/             # other shared components (header, sidebar)
-  features/             # empty for now
+  features/
+    onboarding/         # onboarding steps (OnboardingShell frame, payment, …)
   schemas/              # zod schemas shared by client forms and server actions
   lib/
     utils.ts            # cn() helper
 ```
 
 Server actions re-validate their input with the same zod schema the form uses; the client check is for UX, not security.
+
+- **Card data never reaches our server.** Payment actions take only the program choice and compute amounts from `lib/pricing.ts`; card fields are stand-ins for the payment processor's hosted fields.
+- **JSX gotcha:** this compiler drops the space between an expression and a following HTML entity (`{amount} &amp; start` renders "$2,500& start"). Write such text as one template string: ``{`Pay ${amount} & start`}``.

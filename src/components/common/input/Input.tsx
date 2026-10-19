@@ -33,6 +33,10 @@ type InputProps = React.ComponentProps<"input"> &
     label?: React.ReactNode
     /** Keep the label for assistive technology but hide it visually. */
     hideLabel?: boolean
+    /** Content at the far end of the label row, e.g. accepted-card marks. */
+    labelAddon?: React.ReactNode
+    /** Decorative icon inside the control's trailing edge. */
+    endIcon?: React.ReactNode
     /** Content below the control — helper text, strength meter. */
     hint?: React.ReactNode
     /** Validation message. Renders below the control and marks the input invalid. */
@@ -58,6 +62,8 @@ function Input({
   variant,
   label,
   hideLabel = false,
+  labelAddon,
+  endIcon,
   hint,
   error,
   revealToggle = true,
@@ -76,7 +82,12 @@ function Input({
       data-slot="input"
       aria-invalid={error ? true : undefined}
       aria-describedby={error ? `${inputId}-error` : undefined}
-      className={cn(inputVariants({ variant }), hasToggle && "pr-9", className)}
+      className={cn(
+        inputVariants({ variant }),
+        hasToggle && "pr-9",
+        endIcon && "pr-10",
+        className
+      )}
       {...props}
     />
   )
@@ -99,8 +110,30 @@ function Input({
         )}
       </button>
     </div>
+  ) : endIcon ? (
+    <div className="relative">
+      {control}
+      <span
+        aria-hidden
+        className="text-muted-foreground pointer-events-none absolute top-1/2 right-3 flex -translate-y-1/2"
+      >
+        {endIcon}
+      </span>
+    </div>
   ) : (
     control
+  )
+
+  const labelElement = label && (
+    <label
+      htmlFor={inputId}
+      className={cn(
+        "text-muted-foreground text-sm font-medium",
+        hideLabel ? "sr-only" : !labelAddon && "mb-1.5"
+      )}
+    >
+      {label}
+    </label>
   )
 
   // Bare control when there's nothing to wrap — keeps the input itself the
@@ -109,16 +142,13 @@ function Input({
 
   return (
     <div className={cn("flex flex-col", wrapperClassName)}>
-      {label && (
-        <label
-          htmlFor={inputId}
-          className={cn(
-            "font-identifier text-muted-foreground mb-2 text-sm",
-            hideLabel && "sr-only"
-          )}
-        >
-          {label}
-        </label>
+      {labelAddon && !hideLabel ? (
+        <div className="mb-1.5 flex items-center justify-between gap-3">
+          {labelElement}
+          {labelAddon}
+        </div>
+      ) : (
+        labelElement
       )}
       {field}
       {error ? (

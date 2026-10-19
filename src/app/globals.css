@@ -99,6 +99,18 @@
   --glimpse-chip-blush: #9a5154;
   --glimpse-gain: #3e7a55;
   --glimpse-ring-start: #9aa6c4;
+
+  /* Third-party marks — card networks' own colours, fixed by their
+     owners. Simplified marks, not official artwork: swap in the
+     networks' licensed assets before launch. */
+  --mark-visa: #1a1f71;
+  --mark-mastercard-red: #eb001b;
+  --mark-mastercard-orange: #f79e1b;
+  --mark-amex: #2e77bc;
+  --mark-discover: #ff6000;
+  --mark-unionpay-red: #e21836;
+  --mark-unionpay-blue: #00447c;
+  --mark-unionpay-green: #00963f;
 }
 
 /* ------------------------------------------------------------------ */
@@ -302,6 +314,43 @@
 @utility bg-gradient-navy-cream {
   /* Hairline rules beside the brand mark, fading out. Flip with -scale-x-100. */
   background-image: linear-gradient(90deg, var(--background), var(--primary));
+}
+
+/* LogoLoader (components/common/svg.tsx): a segment travelling round the
+   ring while the glyph breathes. Still under reduced motion. */
+@keyframes logo-loader-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logo-loader-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@utility logo-loader-arc {
+  stroke-dasharray: 26 74;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-loader-orbit 1.3s cubic-bezier(0.5, 0.15, 0.5, 0.85) infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    stroke-dasharray: none;
+  }
+}
+
+@utility logo-loader-glyph {
+  animation: logo-loader-breathe 1.3s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 @layer base {
