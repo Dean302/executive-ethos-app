@@ -1,5 +1,5 @@
-import { AuthLayout } from "@/components/authLayout"
+import { redirect } from "next/navigation"
 
 export default function Home() {
-  return <AuthLayout defaultMode="signup" />
+  redirect("/signin")
 }

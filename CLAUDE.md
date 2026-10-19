@@ -22,13 +22,14 @@ All theming lives in `src/app/globals.css`, in three layers. Always change thing
 - `border-border` frames surfaces; `border-line` divides rows inside them.
 - `bg-tint` / `bg-tint-soft` are light navy fills for header rows, quiet cells and selected states.
 - Status colours (`success`, `warning`, `destructive`) are used sparingly, never as the main palette.
-- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. No shadows or glassmorphism.
+- Tones (`sage`, `slate`, `blush`, `cream`) tell sections, tiles and statuses apart: `bg-tone-<name>-soft` for bands and tracks, `bg-tone-<name>-muted` for chips, `bg-tone-<name>` for bars (non-text), `text-tone-<name>-ink` for text on any of them.
+- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. No shadows or glass effects on UI chrome; the only exception is product illustrations floating over photography (`components/auth/ProductGlimpse`).
 - Hold every new token to WCAG 2.1 AA.
 
 ## Type
 Faces are loaded by `next/font` in `app/layout.tsx`.
 - `font-sans` — Funnel Sans: body and UI.
-- `font-heading` — Funnel Sans at light weight. `h1`–`h6` get it (and `font-light`) from the base layer. The guidelines name Newsreader for headlines; the design deliberately moved headings to Funnel Sans.
+- `font-heading` — Funnel Sans at regular weight. `h1`–`h6` get it (and `font-normal`) from the base layer. The prototype's code says `font-light`, but it never loads weight 300, so its headings render at 400 — match what renders. The guidelines name Newsreader for headlines; the design deliberately moved headings to Funnel Sans.
 - `font-identifier` — Funnel Display: labels, eyebrows, metadata. Natural case; no uppercase tracking.
 - `font-signature` — Newsreader italic: one signature moment per screen at most.
 
@@ -37,8 +38,10 @@ Faces are loaded by `next/font` in `app/layout.tsx`.
 - Surfaces, by nesting depth: `rounded-container` (32px, page-level cards), `rounded-panel` (24px, tiles, option cards, dialogs), `rounded-inset` (16px, boxes inside a container).
 
 ## Brand assets
+Icons and the brand mark live in `components/common/svg.tsx`. It holds icons and logos only — charts and illustrations stay with the component that draws them.
+
 - `<Logo surface="light" | "dark" />` (`components/common/logo`) — the official horizontal lockup files in `public/brand`, used unmodified. The guidelines forbid recolouring, re-spacing or adding effects to the logo.
-- `<BrandMark variant="filled" | "outline" />` (`components/common/brandMark`) — the icon in `currentColor`. Filled when it stands alone; outline only beside the wordmark. Gold on navy, navy on cream.
+- `<BrandMark variant="filled" | "outline" />` (`components/common/svg.tsx`) — the icon in `currentColor`. Filled when it stands alone; outline only beside the wordmark. Gold on navy, navy on cream.
 - `app/icon.svg` — the favicon, from the official gold icon.
 
 ## Voice
@@ -70,8 +73,15 @@ Considered, direct, warm, confident, literate — "the way a confident executive
 ```
 src/
   app/                  # App Router routes, layouts, globals.css
+    (auth)/             # auth routes only; the UI lives in components/auth
   components/
-    common/             # shared UI components (shadcn target)
+    common/             # shared UI primitives (shadcn target)
+    auth/               # everything auth: layout, brand panel, forms, server actions
+    <name>/             # other shared components (header, sidebar)
+  features/             # empty for now
+  schemas/              # zod schemas shared by client forms and server actions
   lib/
     utils.ts            # cn() helper
 ```
+
+Server actions re-validate their input with the same zod schema the form uses; the client check is for UX, not security.

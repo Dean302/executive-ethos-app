@@ -52,6 +52,12 @@
   --gold-ink: #85652d;
   /* Neutral rule for structural chrome (card and panel edges). */
   --neutral-border: #eeeeee;
+  /* Navy steps below the brand navy, for washes over photography and
+     the colour of floating shadows. */
+  --navy-deep: #0e1724;
+  --navy-shadow: #080e18;
+  /* A lighter gold for small labels on deep navy glass. */
+  --gold-light: #d9bc85;
   /* Status. All pass AA as text on cream and white. */
   --status-success: #3f7350;
   --status-warning: #9a5d28;
@@ -60,6 +66,39 @@
   /* Status text on navy surfaces (~7:1 and ~4.9:1 on navy). */
   --status-success-on-dark: #7fb48c;
   --status-danger-on-dark: #d9695a;
+
+  /* Tones — soft tints that tell sections, tiles and statuses apart
+     without leaning on the status colours. Each has four steps:
+       soft    section bands, bar tracks
+       muted   chips, step markers
+       strong  bars and fills (non-text)
+       ink     text on any of the above (all ≥ 5.3:1 on muted) */
+  --tone-sage-soft: #eff4f0;
+  --tone-sage-muted: #e4ede6;
+  --tone-sage-strong: #6e9e7e;
+  --tone-sage-ink: #3a6149;
+  --tone-slate-soft: #f1f3f8;
+  --tone-slate-muted: #e6e9f2;
+  --tone-slate-strong: #7f8db0;
+  --tone-slate-ink: #3e4e73;
+  --tone-blush-soft: #fbf1ef;
+  --tone-blush-muted: #f5e4e0;
+  --tone-blush-strong: #c77f7e;
+  --tone-blush-ink: #7e3d41;
+  --tone-cream-soft: #fbf7f1;
+  --tone-cream-muted: #e9dcc4;
+  --tone-cream-strong: var(--brand-gold);
+  --tone-cream-ink: #6b5428;
+
+  /* Illustration-only values for the product glimpse (sample data in a
+     decorative, aria-hidden picture of the product). Not for UI text. */
+  --glimpse-track-sage: #eaf1ec;
+  --glimpse-track-slate: #eceff5;
+  --glimpse-track-blush: #f7ecea;
+  --glimpse-chip-sage: #4f7f60;
+  --glimpse-chip-blush: #9a5154;
+  --glimpse-gain: #3e7a55;
+  --glimpse-ring-start: #9aa6c4;
 }
 
 /* ------------------------------------------------------------------ */
@@ -177,6 +216,35 @@
   --color-mist: var(--brand-mist);
   --color-ash: var(--brand-ash);
 
+  /* Tones: bg-tone-sage-soft, bg-tone-sage-muted, bg-tone-sage,
+     text-tone-sage-ink, and the same for slate, blush and cream. */
+  --color-tone-sage-soft: var(--tone-sage-soft);
+  --color-tone-sage-muted: var(--tone-sage-muted);
+  --color-tone-sage: var(--tone-sage-strong);
+  --color-tone-sage-ink: var(--tone-sage-ink);
+  --color-tone-slate-soft: var(--tone-slate-soft);
+  --color-tone-slate-muted: var(--tone-slate-muted);
+  --color-tone-slate: var(--tone-slate-strong);
+  --color-tone-slate-ink: var(--tone-slate-ink);
+  --color-tone-blush-soft: var(--tone-blush-soft);
+  --color-tone-blush-muted: var(--tone-blush-muted);
+  --color-tone-blush: var(--tone-blush-strong);
+  --color-tone-blush-ink: var(--tone-blush-ink);
+  --color-tone-cream-soft: var(--tone-cream-soft);
+  --color-tone-cream-muted: var(--tone-cream-muted);
+  --color-tone-cream: var(--tone-cream-strong);
+  --color-tone-cream-ink: var(--tone-cream-ink);
+
+  --color-navy-deep: var(--navy-deep);
+  --color-gold-light: var(--gold-light);
+
+  --color-glimpse-track-sage: var(--glimpse-track-sage);
+  --color-glimpse-track-slate: var(--glimpse-track-slate);
+  --color-glimpse-track-blush: var(--glimpse-track-blush);
+  --color-glimpse-chip-sage: var(--glimpse-chip-sage);
+  --color-glimpse-chip-blush: var(--glimpse-chip-blush);
+  --color-glimpse-gain: var(--glimpse-gain);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -193,9 +261,16 @@
   --radius-panel: 24px; /* stat tiles, option cards, callouts */
   --radius-inset: 16px; /* boxes and rows nested inside a container */
 
+  /* Shadows — only for elements that float: the navy icon badge, and
+     product illustrations over photography. */
+  --shadow-badge: 0 6px 16px -6px color-mix(in srgb, var(--brand-navy) 50%, transparent);
+  --shadow-float: 0 30px 60px -20px color-mix(in srgb, var(--navy-shadow) 55%, transparent);
+  --shadow-float-note: 0 18px 40px -14px color-mix(in srgb, var(--navy-shadow) 60%, transparent);
+
   /* Faces are loaded by next/font in app/layout.tsx.
      sans       Funnel Sans — body and UI
-     heading    Funnel Sans at light weight. The guidelines name
+     heading    Funnel Sans at regular weight — what the design renders
+                (its "light" headings fall back to 400). The guidelines name
                 Newsreader for headlines; the design moved headings to
                 Funnel Sans and kept Newsreader for one signature moment.
      identifier Funnel Display — labels, eyebrows, metadata. Natural
@@ -245,6 +320,6 @@
   h4,
   h5,
   h6 {
-    @apply font-heading font-light;
+    @apply font-heading font-normal;
   }
 }

@@ -1,7 +1,7 @@
 import { Mic } from "lucide-react"
 
-import { BrandMark } from "@/components/common/brandMark"
 import { Button } from "@/components/common/button"
+import { BrandMark } from "@/components/common/svg"
 
 function Header({ title, user = "Executive" }: { title: string; user?: string }) {
   return (

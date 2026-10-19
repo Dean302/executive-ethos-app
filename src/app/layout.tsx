@@ -24,7 +24,7 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Executive Ethos",
+  title: { default: "Executive Ethos", template: "%s — Executive Ethos" },
   description:
     "AI-powered executive communication coaching. Honest feedback, a measurable baseline, and a 1:1 human coach.",
 };

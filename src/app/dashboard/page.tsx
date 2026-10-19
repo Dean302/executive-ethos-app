@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { DashboardLayout } from "@/components/dashboardLayout"
 
 export const metadata: Metadata = {
-  title: "Dashboard — The Executive Ethos",
+  title: "Dashboard",
 }
 
 export default function DashboardPage() {
