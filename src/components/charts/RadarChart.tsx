@@ -2,6 +2,8 @@
 
 import * as React from "react"
 
+import { useReducedMotion } from "@/hooks"
+
 export type RadarDatum = {
   key: string
   label: string
@@ -26,12 +28,6 @@ type RadarChartProps = {
 const RING_FRACTIONS = [0.2, 0.4, 0.6, 0.8, 1]
 const LABEL_PAD = 96
 
-const subscribeReducedMotion = (onChange: () => void) => {
-  const query = window.matchMedia("(prefers-reduced-motion: reduce)")
-  query.addEventListener("change", onChange)
-  return () => query.removeEventListener("change", onChange)
-}
-
 /**
  * A single-series radar: one axis per datum, rings at fifths of `max`, the
  * series growing in on mount. Points show a tooltip on hover or focus.
@@ -45,11 +41,7 @@ function RadarChart({
   seriesLabel = "Current",
   color = "var(--accent)",
 }: RadarChartProps) {
-  const reducedMotion = React.useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    () => false
-  )
+  const reducedMotion = useReducedMotion()
   const [shown, setShown] = React.useState(false)
   const [activeKey, setActiveKey] = React.useState<string | null>(null)
 

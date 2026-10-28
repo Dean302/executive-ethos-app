@@ -4,6 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 
+import { useMediaQuery } from "@/hooks"
 import { SECONDS_PER_QUESTION } from "@/lib/selfAssessment"
 import { cn } from "@/lib/utils"
 
@@ -19,18 +20,6 @@ export type SectionProgress = {
 const EYEBROW = "text-xs font-semibold tracking-[0.06em] uppercase"
 
 const MOBILE_QUERY = "(max-width: 639px)"
-function subscribeToMobile(onChange: () => void) {
-  const query = window.matchMedia(MOBILE_QUERY)
-  query.addEventListener("change", onChange)
-  return () => query.removeEventListener("change", onChange)
-}
-function useIsMobile() {
-  return React.useSyncExternalStore(
-    subscribeToMobile,
-    () => window.matchMedia(MOBILE_QUERY).matches,
-    () => false
-  )
-}
 
 function ProgressRing({ percent }: { percent: number }) {
   const radius = 16
@@ -78,7 +67,7 @@ type AssessmentProgressProps = {
  * bar in its place; on phones it starts slim and expands on demand.
  */
 function AssessmentProgress({ sections, currentSectionId, currentQuestionIndex }: AssessmentProgressProps) {
-  const isMobile = useIsMobile()
+  const isMobile = useMediaQuery(MOBILE_QUERY)
   const [scrolledPast, setScrolledPast] = React.useState(false)
   const [mobileCollapsed, setMobileCollapsed] = React.useState(true)
   const sentinelRef = React.useRef<HTMLDivElement>(null)

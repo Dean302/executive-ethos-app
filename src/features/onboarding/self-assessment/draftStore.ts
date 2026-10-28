@@ -3,6 +3,7 @@
 import * as React from "react"
 import { z } from "zod"
 
+import { useHydrated } from "@/hooks"
 import { WRITTEN_ANSWER_MAX_LENGTH, type AssessmentAnswers } from "@/lib/selfAssessment"
 
 // The in-progress self-assessment, shared by every route of the flow
@@ -74,12 +75,8 @@ export function useDraft() {
   return React.useSyncExternalStore(subscribe, getSnapshot, () => EMPTY_DRAFT)
 }
 
-const subscribeNever = () => () => {}
-
 /** False on the server and during hydration, true once the draft is read. */
-export function useDraftReady() {
-  return React.useSyncExternalStore(subscribeNever, () => true, () => false)
-}
+export const useDraftReady = useHydrated
 
 export const draftActions = {
   rate(key: string, value: number) {

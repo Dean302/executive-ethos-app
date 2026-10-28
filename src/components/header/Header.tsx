@@ -1,38 +1,72 @@
-import { Mic } from "lucide-react"
+"use client"
 
-import { Button } from "@/components/common/button"
-import { BrandMark } from "@/components/common/svg"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { ChevronRight } from "lucide-react"
 
-function Header({ title, user = "Executive" }: { title: string; user?: string }) {
+import { sectionFor } from "@/components/navigation/navItems"
+import { cn } from "@/lib/utils"
+
+export type Crumb = { label: string; href?: string }
+
+function Breadcrumbs({ trail }: { trail: Crumb[] }) {
   return (
-    <header className="border-border bg-background sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between gap-4 border-b px-6">
-      <div className="flex min-w-0 items-center gap-3">
-        <BrandMark className="text-primary size-8" />
-        <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-2">
-          <span className="text-muted-foreground truncate text-sm">
-            Executive Ethos
-          </span>
-          <span className="text-muted-foreground/60 text-sm">/</span>
-          <span className="truncate text-sm font-semibold">{title}</span>
-        </nav>
-      </div>
+    <nav aria-label="Breadcrumb" className="min-w-0">
+      <ol className="flex min-w-0 items-center gap-1.5 text-sm">
+        {trail.map((crumb, i) => {
+          const last = i === trail.length - 1
+          return (
+            <li key={`${crumb.label}-${i}`} className="flex min-w-0 items-center gap-1.5">
+              {i > 0 && <ChevronRight aria-hidden className="text-muted-foreground/60 size-3.5 shrink-0" strokeWidth={2} />}
+              {crumb.href && !last ? (
+                <Link
+                  href={crumb.href}
+                  className="text-muted-foreground hover:text-foreground shrink-0 transition-colors hover:underline"
+                >
+                  {crumb.label}
+                </Link>
+              ) : (
+                <span
+                  aria-current={last ? "page" : undefined}
+                  className={last ? "text-foreground truncate font-medium" : "text-muted-foreground shrink-0"}
+                >
+                  {crumb.label}
+                </span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}
 
-      <div className="flex shrink-0 items-center gap-3">
-        <span className="border-border bg-popover flex items-center gap-2.5 rounded-full border py-1.5 pr-5 pl-1.5">
-          <span
-            aria-hidden
-            className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-full text-xs font-semibold"
-          >
-            {user.charAt(0).toUpperCase()}
-          </span>
-          <span className="text-sm">{user}</span>
-        </span>
+type HeaderProps = {
+  /** The page's own trail. Defaults to the section you're in. */
+  crumbs?: Crumb[]
+  /** Actions on the right: notifications, account. */
+  children: React.ReactNode
+  className?: string
+}
 
-        <Button className="h-11 gap-2 rounded-full px-5 text-sm font-semibold">
-          <Mic className="size-4" />
-          Record Session
-        </Button>
-      </div>
+/**
+ * Desktop header: where you are on the left, actions on the right. The
+ * same height as the sidebar's logo row, so the two line up.
+ */
+function Header({ crumbs, children, className }: HeaderProps) {
+  const pathname = usePathname()
+  const section = sectionFor(pathname)
+  const trail = crumbs ?? (section ? [{ label: section.label, href: section.href }] : [])
+
+  return (
+    <header
+      className={cn(
+        "border-foreground/10 bg-background hidden h-[72px] shrink-0 items-center justify-between gap-4 border-b px-8 lg:flex",
+        className
+      )}
+    >
+      <Breadcrumbs trail={trail} />
+      <div className="flex shrink-0 items-center gap-3">{children}</div>
     </header>
   )
 }

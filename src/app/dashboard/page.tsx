@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import { DashboardLayout } from "@/components/dashboardLayout"
+import { DashboardScreen } from "@/features/dashboard"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -8,10 +9,8 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <DashboardLayout title="Dashboard">
-      <p className="text-muted-foreground text-sm">
-        Your sessions and progress will appear here.
-      </p>
+    <DashboardLayout>
+      <DashboardScreen />
     </DashboardLayout>
   )
 }

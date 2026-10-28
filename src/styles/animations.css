@@ -55,3 +55,53 @@
     animation: none;
   }
 }
+
+/* CircularRecorder (components/recorder): a soft ring breathing out from
+   the button while it records. Holds a still ring under reduced motion. */
+@keyframes record-pulse {
+  from {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@utility record-pulse {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--primary);
+    animation: record-pulse 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    z-index: -1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+      opacity: 0.2;
+      transform: scale(1.12);
+    }
+  }
+}
+
+/* ProcessingScreen (components/processing): a gold wedge sweeping round
+   the score hexagon while the analysis runs. Still under reduced motion. */
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility radar-sweep {
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg, transparent, var(--accent));
+  mask-image: conic-gradient(from 0deg, transparent 0deg, transparent 260deg, black 300deg, black 360deg);
+  animation: radar-sweep 2.6s linear infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
