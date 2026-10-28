@@ -44,7 +44,7 @@ function Breadcrumbs({ trail }: { trail: Crumb[] }) {
 type HeaderProps = {
   /** The page's own trail. Defaults to the section you're in. */
   crumbs?: Crumb[]
-  /** Actions on the right: notifications, account. */
+  /** Actions on the right: record, notifications, account. */
   children: React.ReactNode
   className?: string
 }
