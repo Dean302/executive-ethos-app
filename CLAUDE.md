@@ -99,6 +99,8 @@ src/
   hooks/                # app-wide React hooks, one per file (see Hooks)
   features/
     onboarding/         # onboarding steps (OnboardingShell frame, payment, …)
+    dashboard/          # the executive app, one subfolder per screen (home, recordings, …)
+    leadershipOs/       # Leadership OS, its own product area, one subfolder per screen
   schemas/              # zod schemas shared by client forms and server actions
   lib/
     utils.ts            # cn() helper
