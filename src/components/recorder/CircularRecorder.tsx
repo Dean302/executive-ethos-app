@@ -18,9 +18,13 @@ const MARKER_EVERY = 8
 
 const ANGLES = Array.from({ length: TICK_COUNT }, (_, i) => (i / TICK_COUNT) * Math.PI * 2 - Math.PI / 2)
 
+// Rounded so the server and browser agree: their trig differs in the
+// last decimal place, which would fail hydration.
+const round = (value: number) => Math.round(value * 100) / 100
+
 function tickEnd(angle: number, length: number) {
   const radius = TICK_INNER + Math.max(4, length)
-  return { x2: CENTER + radius * Math.cos(angle), y2: CENTER + radius * Math.sin(angle) }
+  return { x2: round(CENTER + radius * Math.cos(angle)), y2: round(CENTER + radius * Math.sin(angle)) }
 }
 
 type CircularRecorderProps = {
@@ -80,8 +84,8 @@ function CircularRecorder({ status, analyser, onToggle }: CircularRecorderProps)
             ref={(element) => {
               ticks.current[i] = element
             }}
-            x1={CENTER + TICK_INNER * Math.cos(angle)}
-            y1={CENTER + TICK_INNER * Math.sin(angle)}
+            x1={round(CENTER + TICK_INNER * Math.cos(angle))}
+            y1={round(CENTER + TICK_INNER * Math.sin(angle))}
             {...tickEnd(angle, REST_LENGTH)}
             strokeWidth={2.5}
             strokeLinecap="round"

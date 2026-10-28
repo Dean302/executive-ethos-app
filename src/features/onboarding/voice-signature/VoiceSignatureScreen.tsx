@@ -64,7 +64,7 @@ function VoiceSignatureScreen({ nextHref }: { nextHref: string }) {
   }
 
   const hint = {
-    idle: "About 45 seconds. Tap to begin.",
+    idle: "About 45 seconds, tap to begin.",
     requesting: "Allow microphone access to start.",
     recording: "Reading. Tap to stop when you're done.",
     stopped: tooShort ? "That was short. Read the whole passage, then stop." : "Got it. Have a listen before you confirm.",
@@ -110,10 +110,10 @@ function VoiceSignatureScreen({ nextHref }: { nextHref: string }) {
         <>
           {audioUrl && <audio controls src={audioUrl} className="mx-auto mt-4 w-full max-w-sm" />}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button variant="outline" size="lg" onClick={reRecord} disabled={isPending}>
+            <Button variant="outline" size="lg" className="gap-2" onClick={reRecord} disabled={isPending}>
               <RotateCcw aria-hidden strokeWidth={1.75} /> Re-record
             </Button>
-            <Button size="lg" onClick={confirm} disabled={tooShort || !audio || isPending}>
+            <Button size="lg" className="gap-2" onClick={confirm} disabled={tooShort || !audio || isPending}>
               <Check aria-hidden strokeWidth={1.75} />
               {isPending ? "Saving…" : "Confirm & continue"}
             </Button>
