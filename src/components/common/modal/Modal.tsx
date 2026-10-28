@@ -22,6 +22,9 @@ type ModalProps = {
   /** Centre the header (the default when there's an icon). */
   centered?: boolean
   descriptionClassName?: string
+  /** Overrides for the title and description block, e.g. room for the close button. */
+  headerClassName?: string
+  titleClassName?: string
   /** Where focus goes on close. Defaults to whatever opened the modal. */
   finalFocus?: React.RefObject<HTMLElement | null>
   /** Size and padding overrides; set padding with [--modal-pad:…] so
@@ -47,6 +50,8 @@ function Modal({
   footer,
   centered = Boolean(Icon),
   descriptionClassName,
+  headerClassName,
+  titleClassName,
   finalFocus,
   className,
   children,
@@ -71,8 +76,8 @@ function Modal({
             </div>
           )}
 
-          <div className={cn("flex flex-col gap-2", centered && "items-center text-center")}>
-            <Dialog.Title className="font-heading text-xl">{title}</Dialog.Title>
+          <div className={cn("flex flex-col gap-2", centered && "items-center text-center", headerClassName)}>
+            <Dialog.Title className={cn("font-heading text-xl", titleClassName)}>{title}</Dialog.Title>
             {description && (
               <Dialog.Description className={cn("text-muted-foreground text-sm", descriptionClassName)}>
                 {description}
