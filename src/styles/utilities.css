@@ -20,6 +20,30 @@
   background-image: linear-gradient(90deg, var(--background), var(--primary));
 }
 
+/* Illustration tiles: the wash behind a small illustration in an
+   IllustratedCard. Not one of the brand gradients; quieter than any of
+   them, and only ever behind artwork. */
+@utility bg-tile-light {
+  background-image: linear-gradient(180deg, var(--tile-light-from) 0%, var(--tile-light-to) 100%);
+}
+
+@utility bg-tile-blush {
+  background-image: linear-gradient(180deg, var(--tile-blush-from) 0%, var(--tile-blush-to) 100%);
+}
+
+@utility bg-tile-slate {
+  background-image: linear-gradient(180deg, var(--tile-slate-from) 0%, var(--tile-slate-to) 100%);
+}
+
+@utility bg-tile-sage {
+  background-image: linear-gradient(180deg, var(--tile-sage-from) 0%, var(--tile-sage-to) 100%);
+}
+
+/* The premium tile, for Leadership OS: the scheme colour into its glow. */
+@utility bg-tile-navy {
+  background-image: linear-gradient(140deg, var(--primary) 35%, var(--primary-glow) 160%);
+}
+
 /* Horizontal rails that scroll without a visible scrollbar. */
 @utility scrollbar-none {
   scrollbar-width: none;

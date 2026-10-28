@@ -14,7 +14,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <DashboardScreen dashboard={dashboard} viewerName={viewer.name} />
+      <DashboardScreen dashboard={dashboard} viewer={viewer} />
     </DashboardLayout>
   )
 }

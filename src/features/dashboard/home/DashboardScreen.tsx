@@ -1,7 +1,9 @@
 import type { Dashboard } from "@/lib/dashboard"
 import { goalStanding } from "@/lib/goals"
+import type { Viewer } from "@/lib/viewer"
 
 import { GrowthCard } from "./growth/GrowthCard"
+import { NextSteps } from "./nextSteps/NextSteps"
 import { ReadinessBanner } from "./readiness/ReadinessBanner"
 import { CriteriaAtGoal } from "./widgets/CriteriaAtGoal"
 import { PeerReviewsCard } from "./widgets/PeerReviewsCard"
@@ -9,15 +11,15 @@ import { RecentRecordings } from "./widgets/RecentRecordings"
 
 type DashboardScreenProps = {
   dashboard: Dashboard
-  /** The signed-in executive's name, for reminder emails. */
-  viewerName: string
+  /** The signed-in executive: their name for reminder emails, their plan for what's offered. */
+  viewer: Viewer
 }
 
 /**
  * The executive's home: where their score stands, how it's moving, and
  * what's next. Each section lives in a subfolder beside this file.
  */
-function DashboardScreen({ dashboard, viewerName }: DashboardScreenProps) {
+function DashboardScreen({ dashboard, viewer }: DashboardScreenProps) {
   const [latest] = dashboard.recordings
 
   return (
@@ -31,9 +33,11 @@ function DashboardScreen({ dashboard, viewerName }: DashboardScreenProps) {
           <RecentRecordings recordings={dashboard.recordings} className="lg:col-span-2" />
           <div className="flex flex-col gap-5">
             {latest && <CriteriaAtGoal standing={goalStanding(latest.criteria, dashboard.targets)} />}
-            <PeerReviewsCard summary={dashboard.peerReviews} senderName={viewerName} />
+            <PeerReviewsCard summary={dashboard.peerReviews} senderName={viewer.name} />
           </div>
         </div>
+
+        <NextSteps planId={viewer.planId} businessAssessmentPercent={viewer.businessAssessmentPercent} />
       </div>
     </div>
   )

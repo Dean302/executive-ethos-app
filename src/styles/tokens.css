@@ -83,6 +83,19 @@
   --glimpse-gain: #3e7a55;
   --glimpse-ring-start: #9aa6c4;
 
+  /* Small product illustrations (components/illustrations) and the soft
+     washes behind them in illustrated cards: a whisper of a tone at the
+     top deepening to its muted shade. Decorative, never behind text. */
+  --art-edge: #e4e1dc;
+  --tile-light-from: #fbf9f6;
+  --tile-light-to: #f2ece3;
+  --tile-blush-from: #fcf5f3;
+  --tile-blush-to: var(--tone-blush-muted);
+  --tile-slate-from: #f5f6fa;
+  --tile-slate-to: var(--tone-slate-muted);
+  --tile-sage-from: #f5f8f5;
+  --tile-sage-to: var(--tone-sage-muted);
+
   /* Third-party marks — card networks' own colours, fixed by their
      owners. Simplified marks, not official artwork: swap in the
      networks' licensed assets before launch. */
