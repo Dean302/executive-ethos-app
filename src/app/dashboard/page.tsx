@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  const [dashboard, viewer] = await Promise.all([getDashboard(), getViewer()])
+  const viewer = await getViewer()
+  const dashboard = await getDashboard(viewer)
 
   return (
     <DashboardLayout>

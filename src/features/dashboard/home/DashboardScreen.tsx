@@ -5,6 +5,7 @@ import type { Viewer } from "@/lib/viewer"
 import { GrowthCard } from "./growth/GrowthCard"
 import { NextSteps } from "./nextSteps/NextSteps"
 import { ReadinessBanner } from "./readiness/ReadinessBanner"
+import { UpcomingSessions } from "./upcoming/UpcomingSessions"
 import { CriteriaAtGoal } from "./widgets/CriteriaAtGoal"
 import { PeerReviewsCard } from "./widgets/PeerReviewsCard"
 import { RecentRecordings } from "./widgets/RecentRecordings"
@@ -38,6 +39,7 @@ function DashboardScreen({ dashboard, viewer }: DashboardScreenProps) {
         </div>
 
         <NextSteps planId={viewer.planId} businessAssessmentPercent={viewer.businessAssessmentPercent} />
+        <UpcomingSessions sessions={dashboard.upcoming} />
       </div>
     </div>
   )

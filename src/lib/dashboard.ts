@@ -1,9 +1,11 @@
 import { connection } from "next/server"
 
+import { getUpcomingSessions, type UpcomingSession } from "@/lib/coachingSessions"
 import { CRITERIA, type CriterionKey } from "@/lib/criteria"
 import { getOnboardingGoals } from "@/lib/goals"
 import { getPeerInvites, summarisePeerReviews, type PeerReviewSummary } from "@/lib/peerReviews"
 import { summariseReadiness, type CriterionScores, type Readiness, type ScoredRecording } from "@/lib/scores"
+import type { Viewer } from "@/lib/viewer"
 
 // What the executive's dashboard shows, gathered in one place so the page
 // makes a single call.
@@ -27,6 +29,8 @@ export type Dashboard = {
   /** The quarter's locked goal for each criterion, in rubric order. */
   targets: CriterionTarget[]
   peerReviews: PeerReviewSummary
+  /** Live sessions with their coach, soonest first. */
+  upcoming: UpcomingSession[]
 }
 
 // A sample history, newest first, standing in until recordings are stored
@@ -63,7 +67,7 @@ const SAMPLE_RECORDINGS: DashboardRecording[] = SAMPLE_HISTORY.map(
  * scored, every executive sees the sample history; then this reads
  * theirs. Targets are the goals they locked during onboarding.
  */
-export async function getDashboard(): Promise<Dashboard> {
+export async function getDashboard(viewer: Viewer): Promise<Dashboard> {
   // Per request: reminder timing and invite expiry depend on today.
   await connection()
   const now = new Date()
@@ -78,5 +82,6 @@ export async function getDashboard(): Promise<Dashboard> {
     recordings: SAMPLE_RECORDINGS,
     targets,
     peerReviews: summarisePeerReviews(await getPeerInvites(now), now),
+    upcoming: await getUpcomingSessions(viewer.planId, viewer.timeZone, now),
   }
 }
