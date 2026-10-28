@@ -46,7 +46,7 @@ function Card({
     <Component
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground border-border rounded-container border p-6",
+        "bg-card text-card-foreground border-border rounded-container overflow-hidden border p-6",
         Component === "button" &&
           "hover:border-line focus-visible:ring-ring/50 cursor-pointer text-left transition-colors outline-none focus-visible:ring-3",
         className
@@ -58,7 +58,7 @@ function Card({
           <div className="min-w-0 flex-1">
             {title && (
               <h2 className="text-foreground flex items-center gap-2 font-sans text-lg font-medium">
-                {Icon && <Icon aria-hidden className="text-muted-foreground size-4 shrink-0" strokeWidth={1.75} />}
+                {Icon && <Icon aria-hidden className="text-muted-foreground size-4" strokeWidth={1.75} />}
                 {title}
               </h2>
             )}

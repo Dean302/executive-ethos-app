@@ -96,6 +96,13 @@
   --tile-sage-from: #f5f8f5;
   --tile-sage-to: var(--tone-sage-muted);
 
+  /* The sidebar's upgrade note: an oxblood-to-slate panel with a soft
+     gold glow, and its lighter gold link. Only on navy. */
+  --upgrade-from: #6b3036;
+  --upgrade-via: #4a3448;
+  --upgrade-to: #3b4a6e;
+  --upgrade-link: #d9bc85;
+
   /* Third-party marks — card networks' own colours, fixed by their
      owners. Simplified marks, not official artwork: swap in the
      networks' licensed assets before launch. */

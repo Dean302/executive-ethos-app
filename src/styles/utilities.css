@@ -44,6 +44,14 @@
   background-image: linear-gradient(140deg, var(--primary) 35%, var(--primary-glow) 160%);
 }
 
+/* The sidebar's upgrade note: oxblood into slate, gold glowing from the
+   top corner. Its one place; not a general-purpose gradient. */
+@utility bg-upgrade {
+  background-image:
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--accent) 35%, transparent) 0%, transparent 55%),
+    linear-gradient(155deg, var(--upgrade-from) 0%, var(--upgrade-via) 50%, var(--upgrade-to) 100%);
+}
+
 /* Horizontal rails that scroll without a visible scrollbar. */
 @utility scrollbar-none {
   scrollbar-width: none;

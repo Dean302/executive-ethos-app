@@ -34,7 +34,8 @@ function ReadinessBar({ score, target }: ReadinessBarProps) {
           className="text-primary-foreground/80 absolute -top-6 -translate-x-1/2 text-[12px] font-medium whitespace-nowrap"
           style={{ left: `${target.at}%` }}
         >
-          {`${target.label === "Executive Ready" ? "Ready" : target.label} · ${target.at}`}
+          {/* Separate text pieces, as in the design, so it kerns the same. */}
+          {target.label === "Executive Ready" ? "Ready" : target.label} · {target.at}
         </span>
       )}
 

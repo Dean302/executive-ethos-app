@@ -50,7 +50,7 @@ function Sidebar({ planId, businessAssessmentPercent }: SidebarProps) {
   const upgrade = UPGRADE[planId]
 
   return (
-    <aside className="bg-primary text-primary-foreground hidden w-60 shrink-0 flex-col overflow-y-auto px-4 pb-6 lg:flex">
+    <aside className="bg-primary text-primary-foreground hidden w-60 shrink-0 flex-col overflow-y-auto px-4 pb-6 lg:flex lg:border-r lg:border-black/10">
       <div className="flex h-[72px] shrink-0 items-center pl-2">
         <Link href="/dashboard">
           <Logo surface="dark" height={28} />
@@ -97,12 +97,12 @@ function Sidebar({ planId, businessAssessmentPercent }: SidebarProps) {
       {upgrade && (
         <Link
           href="/account#billing"
-          className="group bg-primary-raised ring-primary-foreground/10 hover:bg-primary-hover focus-visible:ring-ring/50 mt-6 block shrink-0 rounded-panel p-4 ring-1 transition-colors outline-none focus-visible:ring-3"
+          className="group bg-upgrade ring-primary-foreground/10 focus-visible:ring-ring/50 mt-6 block shrink-0 rounded-panel p-4 ring-1 transition-[filter] outline-none hover:brightness-110 focus-visible:ring-3"
         >
           <GrowTeam className="h-10 w-auto" />
           <p className="text-primary-foreground mt-3 text-sm font-medium">{upgrade.title}</p>
           <p className="text-primary-foreground/75 mt-1 text-xs leading-relaxed">{upgrade.body}</p>
-          <span className="text-accent mt-3 inline-flex items-center gap-1 text-xs font-medium">
+          <span className="text-upgrade-link mt-3 inline-flex items-center gap-1 text-xs font-medium">
             See plans
             <ArrowRight aria-hidden className="size-3 transition-transform group-hover:translate-x-0.5" strokeWidth={2} />
           </span>
