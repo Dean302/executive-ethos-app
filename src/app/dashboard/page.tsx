@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <DashboardLayout title="Dashboard">
+    <DashboardLayout>
       <p className="text-muted-foreground text-sm">
         Your sessions and progress will appear here.
       </p>
