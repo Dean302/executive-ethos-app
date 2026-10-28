@@ -57,3 +57,36 @@ const SAMPLE_BASELINE: Record<CriterionKey, Pick<CriterionGoal, "current" | "goa
 export async function getOnboardingGoals(): Promise<CriterionGoal[]> {
   return rankGoals(CRITERIA.map(({ key, label }) => ({ key, label, ...SAMPLE_BASELINE[key] })))
 }
+
+/** Within this much of a goal (0–10 scale) counts as "almost there". */
+const ALMOST_WITHIN = 0.5
+
+export type GoalStanding = {
+  total: number
+  /** Criteria whose latest score is at or above the goal. */
+  atGoal: number
+  /** Not at goal, but within half a point of it. */
+  almost: number
+  /** The two furthest from their goal, with the points still to go (100 scale, at least 1). */
+  furthest: { key: CriterionKey; label: string; pointsToGo: number }[]
+}
+
+/**
+ * Where the latest scores stand against the quarter's goals. One rule for
+ * "at goal" everywhere: the latest score is at or above the target.
+ */
+export function goalStanding(
+  scores: Record<CriterionKey, number>,
+  targets: { key: CriterionKey; label: string; goal: number }[]
+): GoalStanding {
+  const short = targets.filter(({ key, goal }) => scores[key] < goal)
+  return {
+    total: targets.length,
+    atGoal: targets.length - short.length,
+    almost: short.filter(({ key, goal }) => scores[key] >= goal - ALMOST_WITHIN).length,
+    furthest: [...short]
+      .sort((a, b) => b.goal - scores[b.key] - (a.goal - scores[a.key]))
+      .slice(0, 2)
+      .map(({ key, label, goal }) => ({ key, label, pointsToGo: Math.max(1, Math.round((goal - scores[key]) * 10)) })),
+  }
+}

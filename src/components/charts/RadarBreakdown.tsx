@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { ArrowDown, ArrowUp } from "lucide-react"
 
 import { LoadingVeil } from "@/components/common/loading-veil"
+import { Trend } from "@/components/common/trend"
 import { cn } from "@/lib/utils"
 
 import { RadarChart } from "./RadarChart"
@@ -17,21 +17,6 @@ export type BreakdownItem = {
   goal: number
   /** The same criterion at the comparison point, 0–10; null when there's nothing to compare with. */
   previous: number | null
-}
-
-function Change({ value }: { value: number }) {
-  if (value === 0) return <span className="text-muted-foreground text-sm">±0</span>
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-0.5 text-sm font-medium",
-        value > 0 ? "text-success" : "text-destructive"
-      )}
-    >
-      {value > 0 ? <ArrowUp aria-label="Up" className="size-3.5" /> : <ArrowDown aria-label="Down" className="size-3.5" />}
-      {Math.abs(value)}
-    </span>
-  )
 }
 
 type RadarBreakdownProps = {
@@ -87,7 +72,7 @@ function RadarBreakdown({ items, compareLabel, caption, settling = false }: Rada
               <div className="flex items-baseline justify-between gap-3 text-sm">
                 <span className="font-medium">{item.label}</span>
                 <span className="flex items-baseline gap-2.5">
-                  {change !== null && <Change value={change} />}
+                  {change !== null && <Trend value={change} />}
                   <span className="text-primary w-10 text-right text-base">{`${percent}%`}</span>
                 </span>
               </div>

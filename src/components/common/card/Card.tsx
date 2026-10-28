@@ -1,4 +1,5 @@
 import * as React from "react"
+import type { LucideIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -6,9 +7,13 @@ import { cn } from "@/lib/utils"
 // handlers type-check whether Card renders a div or a button.
 type CardProps = React.HTMLAttributes<HTMLElement> & {
   title?: React.ReactNode
+  /** Small icon before the title. */
+  icon?: LucideIcon
   description?: React.ReactNode
-  /** Top-right slot — a badge, count, or small action. */
+  /** Top-right slot — a link, a picker, a small action. */
   action?: React.ReactNode
+  /** Line the action up with the title's centre rather than its top. */
+  centerAction?: boolean
   footer?: React.ReactNode
   /** Render as a button when the whole card is clickable. */
   as?: "div" | "button"
@@ -21,13 +26,15 @@ type CardProps = React.HTMLAttributes<HTMLElement> & {
  * Elevation is border + background tint only — no shadows or gradients,
  * per the brand's "precise, not ornate" rule.
  *
- *   <Card title="Sessions" action={<Badge />}>…</Card>
+ *   <Card title="Recent recordings" description="9 recordings" action={<Link …>View all</Link>}>…</Card>
  */
 function Card({
   className,
   title,
+  icon: Icon,
   description,
   action,
+  centerAction = false,
   footer,
   children,
   as: Component = "div",
@@ -47,18 +54,17 @@ function Card({
       {...props}
     >
       {hasHeader && (
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <div className="min-w-0">
+        <div className={cn("mb-6 flex justify-between gap-3", centerAction ? "items-center" : "items-start")}>
+          <div className="min-w-0 flex-1">
             {title && (
-              <h3 className="truncate text-base leading-snug">{title}</h3>
+              <h2 className="text-foreground flex items-center gap-2 font-sans text-lg font-medium">
+                {Icon && <Icon aria-hidden className="text-muted-foreground size-4 shrink-0" strokeWidth={1.75} />}
+                {title}
+              </h2>
             )}
-            {description && (
-              <p className="text-muted-foreground mt-1 text-sm">
-                {description}
-              </p>
-            )}
+            {description && <p className="text-muted-foreground mt-0.5 text-sm">{description}</p>}
           </div>
-          {action && <div className="shrink-0">{action}</div>}
+          {action && <div className="flex shrink-0">{action}</div>}
         </div>
       )}
 

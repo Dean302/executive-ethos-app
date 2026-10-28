@@ -15,6 +15,8 @@ type ModalProps = {
   trigger?: React.ReactElement
   /** Soft navy tile above the title — every dialog in the design has one. */
   icon?: LucideIcon
+  /** Full-width band across the top, e.g. an illustration. */
+  media?: React.ReactNode
   title: React.ReactNode
   description?: React.ReactNode
   /** Action row, set apart on a muted band at the bottom. */
@@ -45,6 +47,7 @@ function Modal({
   onOpenChange,
   trigger,
   icon: Icon,
+  media,
   title,
   description,
   footer,
@@ -70,6 +73,9 @@ function Modal({
             className
           )}
         >
+          {media && (
+            <div className="-mx-(--modal-pad) -mt-(--modal-pad) mb-2 overflow-hidden rounded-t-[inherit]">{media}</div>
+          )}
           {Icon && (
             <div className="from-primary/15 via-primary/5 ring-border mx-auto flex size-16 items-center justify-center rounded-2xl bg-linear-to-br to-transparent ring-1">
               <Icon aria-hidden className="text-primary size-7" strokeWidth={1.5} />
