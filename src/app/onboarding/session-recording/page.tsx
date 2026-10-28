@@ -20,7 +20,7 @@ export default async function SessionRecordingPage({ searchParams }: { searchPar
       backHref={withProgram("/onboarding/voice-signature", planId, termDays)}
       progress={{ step: 5, total: 5 }}
     >
-      <SessionRecordingScreen nextHref={withProgram("/onboarding/goals", planId, termDays)} />
+      <SessionRecordingScreen nextHref={withProgram("/onboarding/processing", planId, termDays)} />
     </OnboardingShell>
   )
 }
