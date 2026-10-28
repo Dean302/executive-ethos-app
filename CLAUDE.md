@@ -95,13 +95,21 @@ src/
   components/
     common/             # shared UI primitives (shadcn target)
     auth/               # everything auth: layout, brand panel, forms, server actions
-    <name>/             # other shared components (header, sidebar)
+    <name>/             # other shared components (header, sidebar, recorder)
+  hooks/                # app-wide React hooks, one per file (see Hooks)
   features/
     onboarding/         # onboarding steps (OnboardingShell frame, payment, …)
   schemas/              # zod schemas shared by client forms and server actions
   lib/
     utils.ts            # cn() helper
 ```
+
+## Hooks
+- `src/hooks/` holds hooks any screen could use: they know nothing about a feature's data (`useAudioRecorder`, `useMediaQuery`, `useReducedMotion`, `useNow`, `useHydrated`). Import them from `@/hooks`.
+- A hook tied to one feature's data stays in that feature (`useDraft` in `features/onboarding/self-assessment/draftStore.ts`). Move it to `src/hooks/` once a second feature needs it.
+- One hook per file, named after it (`useThing.ts`), a named export re-exported from `hooks/index.ts`, and `"use client"` at the top. Closely related variants may share a file (`useReducedMotion` lives in `useMediaQuery.ts`).
+- Don't redefine one inline: no ad hoc `matchMedia` or `useSyncExternalStore` hydration checks in components. Use or extend the shared hook.
+- Browser-only values (clock, media queries, storage) come from `useSyncExternalStore` with a server snapshot, so the server render never guesses and hydration never mismatches.
 
 Server actions re-validate their input with the same zod schema the form uses; the client check is for UX, not security.
 

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 
+import { useNow } from "@/hooks"
 import type { StandingSession } from "@/lib/pricing"
 import {
   SESSION_START_TIMES,
@@ -16,16 +17,6 @@ import {
 import { cn } from "@/lib/utils"
 
 import type { CoachAvailability } from "./coachAvailability"
-
-// The current minute, read only in the browser: the first-session date
-// depends on the visitor's clock and timezone, so the server renders
-// without it rather than guessing.
-const subscribeNever = () => () => {}
-const currentMinute = () => Math.floor(Date.now() / 60_000) * 60_000
-function useNow() {
-  const minute = React.useSyncExternalStore(subscribeNever, currentMinute, () => null)
-  return minute === null ? null : new Date(minute)
-}
 
 const OPTION =
   "focus-visible:ring-ring/50 cursor-pointer rounded-lg border font-medium transition-colors outline-none focus-visible:ring-3"
