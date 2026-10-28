@@ -1,4 +1,4 @@
-import { EXECUTIVE_READY_SCORE } from "@/lib/criteria"
+import { EXECUTIVE_READY_SCORE, type CriterionKey } from "@/lib/criteria"
 
 // Executive Readiness: the overall score out of 100, and the five levels
 // of the founder's scoring rubric it falls into (1–2, 3–4, 5–6, 7–8 and
@@ -48,11 +48,17 @@ export function targetFor(score: number): Target | null {
   return next ? { label: next.name, at: next.min } : null
 }
 
+/** A recording's score on each criterion, 0–10. */
+export type CriterionScores = Record<CriterionKey, number>
+
 export type ScoredRecording = {
   /** Executive Readiness for this recording, 0–100. */
   score: number
   /** When, for display: "2 days ago". */
   dateLabel: string
+  /** Days since it was recorded, for period filters. */
+  ageDays: number
+  criteria: CriterionScores
 }
 
 export type Readiness = {
@@ -92,4 +98,21 @@ export function formatChange(value: number) {
   if (value > 0) return `+${value}`
   if (value < 0) return `−${Math.abs(value)}`
   return "0"
+}
+
+/** The per-criterion average across recordings, to one decimal. */
+export function averageScores(list: CriterionScores[]): CriterionScores {
+  const [first] = list
+  return Object.fromEntries(
+    Object.keys(first).map((key) => [
+      key,
+      Math.round((list.reduce((sum, scores) => sum + scores[key as CriterionKey], 0) / list.length) * 10) / 10,
+    ])
+  ) as CriterionScores
+}
+
+/** Executive Readiness from criterion scores: their average, on the 100 scale. */
+export function readinessOf(scores: CriterionScores) {
+  const values = Object.values(scores)
+  return Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 10)
 }

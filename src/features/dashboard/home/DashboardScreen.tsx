@@ -1,5 +1,6 @@
 import type { Dashboard } from "@/lib/dashboard"
 
+import { GrowthCard } from "./growth/GrowthCard"
 import { ReadinessBanner } from "./readiness/ReadinessBanner"
 
 /**
@@ -10,7 +11,10 @@ function DashboardScreen({ dashboard }: { dashboard: Dashboard }) {
   return (
     <div className="mx-auto max-w-5xl">
       <h1 className="mb-3 text-2xl font-semibold">Overview</h1>
-      <ReadinessBanner readiness={dashboard.readiness} />
+      <div className="flex flex-col gap-5">
+        <ReadinessBanner readiness={dashboard.readiness} />
+        <GrowthCard recordings={dashboard.recordings} targets={dashboard.targets} />
+      </div>
     </div>
   )
 }
