@@ -1,5 +1,6 @@
 import { connection } from "next/server"
 
+import { getCoachingCards, type CoachingCard } from "@/lib/coaching"
 import { getUpcomingSessions, type UpcomingSession } from "@/lib/coachingSessions"
 import { CRITERIA, type CriterionKey } from "@/lib/criteria"
 import { getOnboardingGoals } from "@/lib/goals"
@@ -31,6 +32,8 @@ export type Dashboard = {
   peerReviews: PeerReviewSummary
   /** Live sessions with their coach, soonest first. */
   upcoming: UpcomingSession[]
+  /** What the coach brings between sessions. */
+  coaching: CoachingCard[]
 }
 
 // A sample history, newest first, standing in until recordings are stored
@@ -83,5 +86,6 @@ export async function getDashboard(viewer: Viewer): Promise<Dashboard> {
     targets,
     peerReviews: summarisePeerReviews(await getPeerInvites(now), now),
     upcoming: await getUpcomingSessions(viewer.planId, viewer.timeZone, now),
+    coaching: await getCoachingCards(viewer.planId, viewer.timeZone, now),
   }
 }

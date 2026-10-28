@@ -2,6 +2,7 @@ import type { Dashboard } from "@/lib/dashboard"
 import { goalStanding } from "@/lib/goals"
 import type { Viewer } from "@/lib/viewer"
 
+import { CoachingRow } from "./coaching/CoachingRow"
 import { GrowthCard } from "./growth/GrowthCard"
 import { NextSteps } from "./nextSteps/NextSteps"
 import { ReadinessBanner } from "./readiness/ReadinessBanner"
@@ -40,6 +41,7 @@ function DashboardScreen({ dashboard, viewer }: DashboardScreenProps) {
 
         <NextSteps planId={viewer.planId} businessAssessmentPercent={viewer.businessAssessmentPercent} />
         <UpcomingSessions sessions={dashboard.upcoming} />
+        <CoachingRow cards={dashboard.coaching} />
       </div>
     </div>
   )
