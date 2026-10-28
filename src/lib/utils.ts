@@ -1,5 +1,12 @@
 import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { extendTailwindMerge } from "tailwind-merge"
+
+// Teach tailwind-merge the theme's custom radii (styles/theme.css), so a
+// passed-in rounded-container replaces a component's default rounded-xl
+// instead of both applying and the default winning.
+const twMerge = extendTailwindMerge({
+  extend: { theme: { radius: ["container", "panel", "inset"] } },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
