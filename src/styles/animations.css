@@ -55,3 +55,35 @@
     animation: none;
   }
 }
+
+/* CircularRecorder (components/recorder): a soft ring breathing out from
+   the button while it records. Holds a still ring under reduced motion. */
+@keyframes record-pulse {
+  from {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@utility record-pulse {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-color: var(--primary);
+    animation: record-pulse 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    z-index: -1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+      opacity: 0.2;
+      transform: scale(1.12);
+    }
+  }
+}
