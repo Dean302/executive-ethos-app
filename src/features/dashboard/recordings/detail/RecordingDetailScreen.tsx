@@ -4,7 +4,9 @@ import { ArrowLeft, ChevronRight } from "lucide-react"
 import { Badge } from "@/components/common/badge"
 import type { CriterionTarget } from "@/lib/goals"
 import type { Recording } from "@/lib/recordings"
+import type { Scorecard } from "@/lib/scorecards"
 
+import { CriterionDetails } from "./CriterionDetails"
 import { FlagToggle } from "./FlagToggle"
 import { RecordingThumbnail } from "./RecordingThumbnail"
 import { ScoresCard } from "./ScoresCard"
@@ -15,6 +17,8 @@ type RecordingDetailScreenProps = {
   /** The recording before this one; null for the first. */
   previous: Recording | null
   targets: CriterionTarget[]
+  /** What the analysis found; null until it's been analysed. */
+  scorecard: Scorecard | null
   /** A named way back when it was opened from outside Recordings. */
   back: { href: string; label: string } | null
   /** Now on the executive's clock, wall-clock milliseconds. */
@@ -22,7 +26,7 @@ type RecordingDetailScreenProps = {
 }
 
 /** One recording: what it was, how it scored against the goal and the one before, and the flag to raise it with the coach. */
-function RecordingDetailScreen({ recording, previous, targets, back, now }: RecordingDetailScreenProps) {
+function RecordingDetailScreen({ recording, previous, targets, scorecard, back, now }: RecordingDetailScreenProps) {
   const recordedOn = new Date(recording.recordedAt).toLocaleDateString("en-US", {
     timeZone: "UTC",
     weekday: "long",
@@ -71,6 +75,14 @@ function RecordingDetailScreen({ recording, previous, targets, back, now }: Reco
 
       <ScoreStats score={recording.score} previousScore={previous?.score ?? null} />
       <ScoresCard scores={recording.criteria} previous={previous?.criteria ?? null} targets={targets} />
+      {scorecard && (
+        <CriterionDetails
+          scores={recording.criteria}
+          previous={previous?.criteria ?? null}
+          targets={targets}
+          findings={scorecard.findings}
+        />
+      )}
     </div>
   )
 }

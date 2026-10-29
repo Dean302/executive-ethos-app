@@ -7,6 +7,7 @@ import { backLinkFor } from "@/features/dashboard/recordings/detail/origins"
 import { wallClock } from "@/lib/dates"
 import { getCriterionTargets } from "@/lib/goals"
 import { getRecordings } from "@/lib/recordings"
+import { getScorecard } from "@/lib/scorecards"
 import { getViewer } from "@/lib/viewer"
 
 type RecordingPageProps = {
@@ -28,7 +29,11 @@ export async function generateMetadata({ params }: RecordingPageProps): Promise<
 
 export default async function RecordingPage({ params, searchParams }: RecordingPageProps) {
   const [{ id }, { from }] = await Promise.all([params, searchParams])
-  const [{ viewer, recording, previous }, targets] = await Promise.all([findRecording(id), getCriterionTargets()])
+  const [{ viewer, recording, previous }, targets, scorecard] = await Promise.all([
+    findRecording(id),
+    getCriterionTargets(),
+    getScorecard(id),
+  ])
   if (!recording) notFound()
 
   return (
@@ -37,6 +42,7 @@ export default async function RecordingPage({ params, searchParams }: RecordingP
         recording={recording}
         previous={previous}
         targets={targets}
+        scorecard={scorecard}
         back={backLinkFor(from)}
         now={wallClock(new Date(), viewer.timeZone).getTime()}
       />
