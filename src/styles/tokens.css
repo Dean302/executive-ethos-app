@@ -193,6 +193,8 @@
   --chart-3: var(--brand-slate);
   --chart-4: var(--brand-mist);
   --chart-5: var(--brand-metal);
+  /* The score trend's line deepens from this light slate to the primary colour. */
+  --chart-trend-start: #8a97b5;
 
   /* Control radius; the container scale lives in @theme. */
   --radius: 0.5rem;

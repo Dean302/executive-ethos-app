@@ -52,6 +52,12 @@
     linear-gradient(155deg, var(--upgrade-from) 0%, var(--upgrade-via) 50%, var(--upgrade-to) 100%);
 }
 
+/* The score trend's legend swatch: the same light-slate-to-primary
+   fade as its line. A chart key, not a surface gradient. */
+@utility bg-gradient-trend {
+  background-image: linear-gradient(90deg, var(--chart-trend-start), var(--primary));
+}
+
 /* Horizontal rails that scroll without a visible scrollbar. */
 @utility scrollbar-none {
   scrollbar-width: none;

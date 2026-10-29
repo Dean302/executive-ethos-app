@@ -1,4 +1,7 @@
+import { connection } from "next/server"
+
 import { CRITERIA } from "@/lib/criteria"
+import { DAY_MS, wallClock } from "@/lib/dates"
 import type { CriterionScores, ScoredRecording } from "@/lib/scores"
 
 // The executive's recordings: every meeting or practice they recorded or
@@ -11,6 +14,8 @@ export type Recording = ScoredRecording & {
   id: string
   title: string
   type: RecordingType
+  /** When it was recorded, as the executive's wall-clock time in milliseconds (see lib/dates). */
+  recordedAt: number
   /** "38 min". */
   duration: string
   /** Flagged to discuss with the coach, and not yet discussed. */
@@ -51,11 +56,15 @@ const SAMPLE_HISTORY: SampleRow[] = [
 ]
 
 /**
- * The signed-in executive's scored recordings, newest first. Until
- * recordings are stored and scored, every executive sees the sample
- * history; then this reads theirs.
+ * The signed-in executive's scored recordings, newest first, with their
+ * times on the executive's own clock. Until recordings are stored and
+ * scored, every executive sees the sample history; then this reads
+ * theirs.
  */
-export async function getRecordings(): Promise<Recording[]> {
+export async function getRecordings(timeZone: string): Promise<Recording[]> {
+  // Per request: the sample's dates count back from today.
+  await connection()
+  const now = wallClock(new Date(), timeZone).getTime()
   return SAMPLE_HISTORY.map(([id, title, type, score, dateLabel, ageDays, duration, flagged, scores]) => ({
     id,
     title,
@@ -63,6 +72,7 @@ export async function getRecordings(): Promise<Recording[]> {
     score,
     dateLabel,
     ageDays,
+    recordedAt: now - ageDays * DAY_MS,
     duration,
     flaggedForCoach: flagged,
     criteria: Object.fromEntries(CRITERIA.map(({ key }, i) => [key, scores[i]])) as CriterionScores,

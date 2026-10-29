@@ -36,7 +36,7 @@ export async function getDashboard(viewer: Viewer): Promise<Dashboard> {
   // Per request: reminder timing and invite expiry depend on today.
   await connection()
   const now = new Date()
-  const [goals, recordings] = await Promise.all([getOnboardingGoals(), getRecordings()])
+  const [goals, recordings] = await Promise.all([getOnboardingGoals(), getRecordings(viewer.timeZone)])
   const targets = CRITERIA.map(({ key, label }) => ({
     key,
     label,
