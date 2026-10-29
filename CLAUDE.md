@@ -41,7 +41,8 @@ So that screens re-skin without edits:
 - `bg-tint` / `bg-tint-soft` are light navy fills for header rows, quiet cells and selected states.
 - Status colours (`success`, `warning`, `destructive`) are used sparingly, never as the main palette.
 - Tones (`sage`, `slate`, `blush`, `cream`) tell sections, tiles and statuses apart: `bg-tone-<name>-soft` for bands and tracks, `bg-tone-<name>-muted` for chips, `bg-tone-<name>` for bars (non-text), `text-tone-<name>-ink` for text on any of them.
-- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. No shadows or glass effects on UI chrome; the only exception is product illustrations floating over photography (`components/auth/ProductGlimpse`).
+- Gradients: only the guidelines' three — `bg-gradient-navy-slate` (navy banners), `bg-gradient-gold-cream` (arrival moments), `bg-gradient-navy-cream` (hairlines beside the mark). Subtle, never the focal point. Two other washes, each with one job: `bg-tile-<tone>` (light, blush, slate, sage, and navy for Leadership OS), only ever behind a small illustration in an illustrated card; and `bg-upgrade`, the sidebar's upgrade note.
+- No shadows or glass effects on UI chrome. Exceptions: product illustrations floating over photography (`components/auth/ProductGlimpse`), and illustrated cards lifting on hover (`components/common/illustrated-card`), as the design does.
 - Hold every new token to WCAG 2.1 AA.
 
 ## Type

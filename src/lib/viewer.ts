@@ -10,6 +10,8 @@ export type Viewer = {
   planId: PlanId
   /** Business Assessment progress, 0–100. Leadership OS unlocks at 100. */
   businessAssessmentPercent: number
+  /** IANA time zone their schedule is in, e.g. "America/New_York". */
+  timeZone: string
 }
 
 /** "Jordan Ellis" → "JE". */
@@ -32,5 +34,6 @@ export async function getViewer(): Promise<Viewer> {
     role: "CEO, Meridian Health",
     planId: "Alignment",
     businessAssessmentPercent: 0,
+    timeZone: "America/New_York",
   }
 }

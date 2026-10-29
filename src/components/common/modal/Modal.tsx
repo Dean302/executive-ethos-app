@@ -15,6 +15,8 @@ type ModalProps = {
   trigger?: React.ReactElement
   /** Soft navy tile above the title — every dialog in the design has one. */
   icon?: LucideIcon
+  /** Full-width band across the top, e.g. an illustration. */
+  media?: React.ReactNode
   title: React.ReactNode
   description?: React.ReactNode
   /** Action row, set apart on a muted band at the bottom. */
@@ -22,6 +24,9 @@ type ModalProps = {
   /** Centre the header (the default when there's an icon). */
   centered?: boolean
   descriptionClassName?: string
+  /** Overrides for the title and description block, e.g. room for the close button. */
+  headerClassName?: string
+  titleClassName?: string
   /** Where focus goes on close. Defaults to whatever opened the modal. */
   finalFocus?: React.RefObject<HTMLElement | null>
   /** Size and padding overrides; set padding with [--modal-pad:…] so
@@ -42,11 +47,14 @@ function Modal({
   onOpenChange,
   trigger,
   icon: Icon,
+  media,
   title,
   description,
   footer,
   centered = Boolean(Icon),
   descriptionClassName,
+  headerClassName,
+  titleClassName,
   finalFocus,
   className,
   children,
@@ -65,14 +73,17 @@ function Modal({
             className
           )}
         >
+          {media && (
+            <div className="-mx-(--modal-pad) -mt-(--modal-pad) mb-2 overflow-hidden rounded-t-[inherit]">{media}</div>
+          )}
           {Icon && (
             <div className="from-primary/15 via-primary/5 ring-border mx-auto flex size-16 items-center justify-center rounded-2xl bg-linear-to-br to-transparent ring-1">
               <Icon aria-hidden className="text-primary size-7" strokeWidth={1.5} />
             </div>
           )}
 
-          <div className={cn("flex flex-col gap-2", centered && "items-center text-center")}>
-            <Dialog.Title className="font-heading text-xl">{title}</Dialog.Title>
+          <div className={cn("flex flex-col gap-2", centered && "items-center text-center", headerClassName)}>
+            <Dialog.Title className={cn("font-heading text-xl", titleClassName)}>{title}</Dialog.Title>
             {description && (
               <Dialog.Description className={cn("text-muted-foreground text-sm", descriptionClassName)}>
                 {description}

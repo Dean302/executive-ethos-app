@@ -3,11 +3,14 @@
 import * as React from "react"
 
 import { useReducedMotion } from "@/hooks"
+import { roundTo } from "@/lib/utils"
 
 export type RadarDatum = {
   key: string
   label: string
   value: number
+  /** Drawn as a dashed overlay when given. */
+  goal?: number
 }
 
 type RadarChartProps = {
@@ -21,16 +24,22 @@ type RadarChartProps = {
   centerCaption: string
   /** Legend and tooltip name for the series. */
   seriesLabel?: string
+  /** Legend and tooltip name for the goal overlay. */
+  goalLabel?: string
   /** Stroke and fill of the series polygon. */
   color?: string
+  /** Controlled hover, so a list beside the chart can highlight with it. Omit both to let the chart manage it. */
+  hoveredKey?: string | null
+  onHoveredKeyChange?: (key: string | null) => void
 }
 
 const RING_FRACTIONS = [0.2, 0.4, 0.6, 0.8, 1]
 const LABEL_PAD = 96
 
 /**
- * A single-series radar: one axis per datum, rings at fifths of `max`, the
- * series growing in on mount. Points show a tooltip on hover or focus.
+ * A radar: one axis per datum, rings at fifths of `max`, the series
+ * growing in on mount, and a dashed goal overlay when the data has goals.
+ * Points show a tooltip on hover or focus.
  */
 function RadarChart({
   data,
@@ -39,11 +48,21 @@ function RadarChart({
   centerValue,
   centerCaption,
   seriesLabel = "Current",
+  goalLabel = "Goal",
   color = "var(--accent)",
+  hoveredKey,
+  onHoveredKeyChange,
 }: RadarChartProps) {
   const reducedMotion = useReducedMotion()
   const [shown, setShown] = React.useState(false)
-  const [activeKey, setActiveKey] = React.useState<string | null>(null)
+  const [ownActiveKey, setOwnActiveKey] = React.useState<string | null>(null)
+  const controlled = hoveredKey !== undefined
+  const activeKey = controlled ? hoveredKey : ownActiveKey
+  const setActiveKey = (key: string | null) => {
+    if (!controlled) setOwnActiveKey(key)
+    onHoveredKeyChange?.(key)
+  }
+  const hasGoals = data.every((d) => d.goal !== undefined)
 
   // Grow the series in on the frame after mounting.
   React.useEffect(() => {
@@ -55,8 +74,9 @@ function RadarChart({
   const radius = center - LABEL_PAD
   const angle = (i: number) => (i * Math.PI * 2) / data.length - Math.PI / 2
   const point = (i: number, value: number) => {
+    // Rounded so the server's and browser's trig agree for hydration.
     const r = (Math.min(value, max) / max) * radius
-    return { x: center + r * Math.cos(angle(i)), y: center + r * Math.sin(angle(i)) }
+    return { x: roundTo(center + r * Math.cos(angle(i))), y: roundTo(center + r * Math.sin(angle(i))) }
   }
   const polygon = (values: number[]) =>
     values.map((value, i) => point(i, value)).map(({ x, y }) => `${x},${y}`).join(" ")
@@ -72,7 +92,9 @@ function RadarChart({
         viewBox={`0 0 ${size} ${size}`}
         className="w-full overflow-visible"
         role="img"
-        aria-label={`${centerCaption} ${centerValue}. ${data.map((d) => `${d.label}: ${percent(d.value)}%`).join(". ")}`}
+        aria-label={`${centerCaption} ${centerValue}. ${data
+          .map((d) => `${d.label}: ${percent(d.value)}%${d.goal !== undefined ? `, goal ${percent(d.goal)}%` : ""}`)
+          .join(". ")}`}
       >
         {RING_FRACTIONS.map((fraction) => (
           <polygon
@@ -109,6 +131,16 @@ function RadarChart({
               : "transform 900ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease-out",
           }}
         >
+          {hasGoals && (
+            <polygon
+              points={polygon(data.map((d) => d.goal ?? 0))}
+              fill="none"
+              strokeWidth={1.75}
+              strokeDasharray="5 4"
+              strokeLinejoin="round"
+              className="stroke-oxblood"
+            />
+          )}
           <polygon
             points={polygon(data.map((d) => d.value))}
             fill={color}
@@ -124,8 +156,8 @@ function RadarChart({
         </g>
 
         {data.map((d, i) => {
-          const x = center + (radius + 40) * Math.cos(angle(i))
-          const y = center + (radius + 40) * Math.sin(angle(i))
+          const x = roundTo(center + (radius + 40) * Math.cos(angle(i)))
+          const y = roundTo(center + (radius + 40) * Math.sin(angle(i)))
           const words = d.label.split(" ")
           const middle = Math.ceil(words.length / 2)
           const isActive = d.key === activeKey
@@ -168,7 +200,9 @@ function RadarChart({
                 r={10}
                 fill="transparent"
                 tabIndex={0}
-                aria-label={`${d.label}: ${percent(d.value)}%`}
+                aria-label={`${d.label}: ${seriesLabel.toLowerCase()} ${percent(d.value)}%${
+                  d.goal !== undefined ? `, goal ${percent(d.goal)}%` : ""
+                }`}
                 className="cursor-pointer outline-none"
                 onMouseEnter={() => setActiveKey(d.key)}
                 onMouseLeave={() => setActiveKey(null)}
@@ -206,8 +240,14 @@ function RadarChart({
         {active &&
           (() => {
             const p = point(activeIndex, active.value)
+            const lines = [`${seriesLabel}: ${percent(active.value)}%`]
+            if (active.goal !== undefined) {
+              const gap = percent(active.goal) - percent(active.value)
+              lines.push(`${goalLabel}: ${percent(active.goal)}%`)
+              lines.push(gap > 0 ? `${gap}% to goal` : gap < 0 ? `${Math.abs(gap)}% above goal` : "At goal")
+            }
             const width = Math.max(150, Math.min(220, active.label.length * 6.4 + 28))
-            const height = 42
+            const height = 26 + lines.length * 16
             const rawX = p.x >= center ? p.x + 14 : p.x - 14 - width
             const rawY = p.y >= center ? p.y - height - 14 : p.y + 14
             const x = Math.min(Math.max(rawX, 4), size - width - 4)
@@ -218,9 +258,11 @@ function RadarChart({
                 <text x={x + 14} y={y + 21} fontSize={12.5} fontWeight={600} fill="var(--foreground)">
                   {active.label}
                 </text>
-                <text x={x + 14} y={y + 37} fontSize={11.5} fill="var(--muted-foreground)">
-                  {`${seriesLabel}: ${percent(active.value)}%`}
-                </text>
+                {lines.map((line, i) => (
+                  <text key={line} x={x + 14} y={y + 21 + (i + 1) * 16} fontSize={11.5} fill="var(--muted-foreground)">
+                    {line}
+                  </text>
+                ))}
               </g>
             )
           })()}
@@ -231,6 +273,12 @@ function RadarChart({
           <span aria-hidden className="inline-block h-0.5 w-4 rounded-full" style={{ backgroundColor: color }} />
           {seriesLabel}
         </span>
+        {hasGoals && (
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden className="border-oxblood inline-block h-0.5 w-4 rounded-full border-t-2 border-dashed" />
+            {goalLabel}
+          </span>
+        )}
       </div>
     </div>
   )

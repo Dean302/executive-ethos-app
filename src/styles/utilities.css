@@ -20,6 +20,44 @@
   background-image: linear-gradient(90deg, var(--background), var(--primary));
 }
 
+/* Illustration tiles: the wash behind a small illustration in an
+   IllustratedCard. Not one of the brand gradients; quieter than any of
+   them, and only ever behind artwork. */
+@utility bg-tile-light {
+  background-image: linear-gradient(180deg, var(--tile-light-from) 0%, var(--tile-light-to) 100%);
+}
+
+@utility bg-tile-blush {
+  background-image: linear-gradient(180deg, var(--tile-blush-from) 0%, var(--tile-blush-to) 100%);
+}
+
+@utility bg-tile-slate {
+  background-image: linear-gradient(180deg, var(--tile-slate-from) 0%, var(--tile-slate-to) 100%);
+}
+
+@utility bg-tile-sage {
+  background-image: linear-gradient(180deg, var(--tile-sage-from) 0%, var(--tile-sage-to) 100%);
+}
+
+/* The premium tile, for Leadership OS: the scheme colour into its glow. */
+@utility bg-tile-navy {
+  background-image: linear-gradient(140deg, var(--primary) 35%, var(--primary-glow) 160%);
+}
+
+/* The sidebar's upgrade note: oxblood into slate, gold glowing from the
+   top corner. Its one place; not a general-purpose gradient. */
+@utility bg-upgrade {
+  background-image:
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--accent) 35%, transparent) 0%, transparent 55%),
+    linear-gradient(155deg, var(--upgrade-from) 0%, var(--upgrade-via) 50%, var(--upgrade-to) 100%);
+}
+
+/* The score trend's legend swatch: the same light-slate-to-primary
+   fade as its line. A chart key, not a surface gradient. */
+@utility bg-gradient-trend {
+  background-image: linear-gradient(90deg, var(--chart-trend-start), var(--primary));
+}
+
 /* Horizontal rails that scroll without a visible scrollbar. */
 @utility scrollbar-none {
   scrollbar-width: none;

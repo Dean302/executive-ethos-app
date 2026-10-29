@@ -71,6 +71,8 @@
   --color-navy-deep: var(--navy-deep);
   --color-gold-light: var(--gold-light);
 
+  --color-art-edge: var(--art-edge);
+  --color-upgrade-link: var(--upgrade-link);
   --color-glimpse-track-sage: var(--glimpse-track-sage);
   --color-glimpse-track-slate: var(--glimpse-track-slate);
   --color-glimpse-track-blush: var(--glimpse-track-blush);
@@ -109,9 +111,13 @@
      identifier Funnel Display — labels, eyebrows, metadata. Natural
                 case; the design dropped the guidelines' uppercase.
      signature  Newsreader italic — sparingly, one moment per screen. */
-  --font-sans: var(--font-funnel-sans), ui-sans-serif, system-ui, sans-serif;
+  /* The faces by name rather than through next/font's variables, which add
+     a resized-Arial fallback: characters the Funnel faces lack (arrows like
+     "→") then come from the system font, as in the design. next/font still
+     loads and self-hosts the faces (app/layout.tsx). */
+  --font-sans: "Funnel Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-heading: var(--font-sans);
-  --font-identifier: var(--font-funnel-display), ui-sans-serif, system-ui, sans-serif;
+  --font-identifier: "Funnel Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-signature: var(--font-newsreader), Georgia, serif;
   /* Symbols Funnel Sans doesn't carry (→, ←): the system face, as the
      design renders them, not the metric-matched Arial next/font inserts

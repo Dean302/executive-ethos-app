@@ -1,6 +1,7 @@
 import { Header, MobileHeader, UserMenu, type Crumb } from "@/components/header"
 import { MobileNav } from "@/components/navigation"
 import { NotificationBell } from "@/components/notifications"
+import { RecordCta } from "@/components/recorder"
 import { Sidebar } from "@/components/sidebar"
 import { getViewer } from "@/lib/viewer"
 
@@ -12,7 +13,7 @@ type DashboardLayoutProps = {
 
 /**
  * The executive app's frame. Desktop: a navy sidebar and a header with
- * where you are, notifications and the account menu. Phones: a
+ * where you are, Record (once the page's own is out of view), notifications and the account menu. Phones: a
  * navy top bar and a bottom tab bar. Only the page itself scrolls.
  */
 async function DashboardLayout({ crumbs, children }: DashboardLayoutProps) {
@@ -28,6 +29,7 @@ async function DashboardLayout({ crumbs, children }: DashboardLayoutProps) {
           <UserMenu name={viewer.name} role={viewer.role} tone="dark" />
         </MobileHeader>
         <Header crumbs={crumbs}>
+          <RecordCta variant="header" className="mr-1" />
           <NotificationBell />
           <UserMenu name={viewer.name} role={viewer.role} />
         </Header>
