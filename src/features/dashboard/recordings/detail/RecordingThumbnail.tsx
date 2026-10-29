@@ -100,7 +100,7 @@ function RecordingThumbnail({ duration, recordedAt, seed }: RecordingThumbnailPr
           <p className="text-accent text-[11px] font-semibold tracking-[0.06em] uppercase sm:text-xs">
             {date.toLocaleDateString("en-US", { timeZone: "UTC", month: "short" })}
           </p>
-          <p className="mt-1 font-sans text-[34px] leading-none font-light tabular-nums sm:text-[44px]">
+          <p className="mt-1 font-sans text-[34px] leading-none tabular-nums sm:text-[44px]">
             {date.getUTCDate()}
           </p>
         </div>

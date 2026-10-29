@@ -11,6 +11,7 @@ import { FlagToggle } from "./FlagToggle"
 import { RecordingThumbnail } from "./RecordingThumbnail"
 import { ScoresCard } from "./ScoresCard"
 import { ScoreStats } from "./ScoreStats"
+import { StrengthsAndNextSteps } from "./StrengthsAndNextSteps"
 
 type RecordingDetailScreenProps = {
   recording: Recording
@@ -25,7 +26,11 @@ type RecordingDetailScreenProps = {
   now: number
 }
 
-/** One recording: what it was, how it scored against the goal and the one before, and the flag to raise it with the coach. */
+/**
+ * One recording: what it was, how it scored against the goal and the one
+ * before, the findings behind each score, what to keep and what to change
+ * next time, and the flag to raise it with the coach.
+ */
 function RecordingDetailScreen({ recording, previous, targets, scorecard, back, now }: RecordingDetailScreenProps) {
   const recordedOn = new Date(recording.recordedAt).toLocaleDateString("en-US", {
     timeZone: "UTC",
@@ -76,12 +81,15 @@ function RecordingDetailScreen({ recording, previous, targets, scorecard, back, 
       <ScoreStats score={recording.score} previousScore={previous?.score ?? null} />
       <ScoresCard scores={recording.criteria} previous={previous?.criteria ?? null} targets={targets} />
       {scorecard && (
-        <CriterionDetails
-          scores={recording.criteria}
-          previous={previous?.criteria ?? null}
-          targets={targets}
-          findings={scorecard.findings}
-        />
+        <>
+          <CriterionDetails
+            scores={recording.criteria}
+            previous={previous?.criteria ?? null}
+            targets={targets}
+            findings={scorecard.findings}
+          />
+          <StrengthsAndNextSteps strengths={scorecard.strengths} nextSteps={scorecard.nextSteps} />
+        </>
       )}
     </div>
   )
