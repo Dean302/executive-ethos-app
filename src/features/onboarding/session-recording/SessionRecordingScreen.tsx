@@ -76,7 +76,9 @@ function SessionRecordingScreen({ nextHref }: { nextHref: string }) {
   }
 
   return (
-    <div className="text-center">
+    // A centred column of flex items, as in the design, so buttons and the
+    // badge sit as blocks rather than on text lines.
+    <div className="flex flex-col items-center text-center">
       <span className="bg-primary/10 text-primary mx-auto flex size-11 items-center justify-center rounded-full">
         <FileAudio aria-hidden className="size-5" strokeWidth={1.75} />
       </span>
@@ -94,7 +96,7 @@ function SessionRecordingScreen({ nextHref }: { nextHref: string }) {
       <FileDropzone
         // Remount on switching, so the picker's accept and focus reset.
         key={kind}
-        className="mx-auto mt-8 max-w-sm"
+        className="mt-8 max-w-sm"
         file={file}
         onFileChange={choose}
         accept={sampleAccept(kind)}
@@ -111,21 +113,21 @@ function SessionRecordingScreen({ nextHref }: { nextHref: string }) {
         </p>
       )}
 
-      <Button size="lg" className="mt-10 gap-2" disabled={!file || !!fileError || isPending} onClick={confirm}>
-        <Check aria-hidden strokeWidth={1.75} />
-        {isPending ? "Uploading…" : "Confirm & Upload"}
-      </Button>
-
-      <div className="mt-6">
-        <button
-          type="button"
-          onClick={switchMode}
-          disabled={isPending}
-          className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 cursor-pointer rounded-sm text-sm underline-offset-4 outline-none hover:underline focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50"
-        >
-          {mode.switchLabel}
-        </button>
+      <div className="mt-10 flex items-center gap-3">
+        <Button size="lg" className="gap-2" disabled={!file || !!fileError || isPending} onClick={confirm}>
+          <Check aria-hidden strokeWidth={1.75} />
+          {isPending ? "Uploading…" : "Confirm & Upload"}
+        </Button>
       </div>
+
+      <button
+        type="button"
+        onClick={switchMode}
+        disabled={isPending}
+        className="text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 mt-6 cursor-pointer rounded-sm text-sm underline-offset-4 outline-none hover:underline focus-visible:ring-3 disabled:pointer-events-none disabled:opacity-50"
+      >
+        {mode.switchLabel}
+      </button>
     </div>
   )
 }

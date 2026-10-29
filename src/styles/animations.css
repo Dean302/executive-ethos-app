@@ -105,3 +105,28 @@
     animation: none;
   }
 }
+
+/* RecordingThumbnail (features/dashboard/recordings/detail): the waveform
+   breathes while the recording plays, staggered per bar. Still under
+   reduced motion. */
+@keyframes wave-bar {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.4);
+  }
+}
+
+@utility wave-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@utility wave-bar-playing {
+  animation: wave-bar 0.9s ease-in-out infinite;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}

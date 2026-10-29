@@ -47,7 +47,7 @@ function RecentRecordings({ recordings, className }: { recordings: Recording[]; 
             return (
               <li key={recording.id}>
                 <Link
-                  href={`/sessions/${recording.id}`}
+                  href={`/sessions/${recording.id}?from=dashboard`}
                   className={cn(
                     "hover:bg-secondary/50 focus-visible:ring-ring/50 -mx-2.5 flex items-center justify-between gap-4 rounded-inset px-2.5 py-3 transition-colors outline-none focus-visible:ring-3",
                     // The divider rides on the row itself, so it follows the row's rounded ends.
