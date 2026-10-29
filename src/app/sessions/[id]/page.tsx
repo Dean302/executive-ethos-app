@@ -5,6 +5,7 @@ import { DashboardLayout } from "@/components/dashboardLayout"
 import { RecordingDetailScreen } from "@/features/dashboard"
 import { backLinkFor } from "@/features/dashboard/recordings/detail/origins"
 import { wallClock } from "@/lib/dates"
+import { getCriterionTargets } from "@/lib/goals"
 import { getRecordings } from "@/lib/recordings"
 import { getViewer } from "@/lib/viewer"
 
@@ -16,7 +17,8 @@ type RecordingPageProps = {
 async function findRecording(id: string) {
   const viewer = await getViewer()
   const recordings = await getRecordings(viewer.timeZone)
-  return { viewer, recording: recordings.find((recording) => recording.id === id) }
+  const index = recordings.findIndex((recording) => recording.id === id)
+  return { viewer, recording: recordings[index], previous: recordings[index + 1] ?? null }
 }
 
 export async function generateMetadata({ params }: RecordingPageProps): Promise<Metadata> {
@@ -26,13 +28,15 @@ export async function generateMetadata({ params }: RecordingPageProps): Promise<
 
 export default async function RecordingPage({ params, searchParams }: RecordingPageProps) {
   const [{ id }, { from }] = await Promise.all([params, searchParams])
-  const { viewer, recording } = await findRecording(id)
+  const [{ viewer, recording, previous }, targets] = await Promise.all([findRecording(id), getCriterionTargets()])
   if (!recording) notFound()
 
   return (
     <DashboardLayout crumbs={[{ label: "Recordings", href: "/sessions" }, { label: recording.title }]}>
       <RecordingDetailScreen
         recording={recording}
+        previous={previous}
+        targets={targets}
         back={backLinkFor(from)}
         now={wallClock(new Date(), viewer.timeZone).getTime()}
       />

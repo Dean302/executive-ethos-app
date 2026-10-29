@@ -90,3 +90,12 @@ export function goalStanding(
       .map(({ key, label, goal }) => ({ key, label, pointsToGo: Math.max(1, Math.round((goal - scores[key]) * 10)) })),
   }
 }
+
+/** One criterion's locked goal for the quarter, 0–10. */
+export type CriterionTarget = { key: CriterionKey; label: string; goal: number }
+
+/** The quarter's locked goal for each criterion, in rubric order. */
+export async function getCriterionTargets(): Promise<CriterionTarget[]> {
+  const goals = await getOnboardingGoals()
+  return CRITERIA.map(({ key, label }) => ({ key, label, goal: goals.find((goal) => goal.key === key)?.goal ?? 10 }))
+}

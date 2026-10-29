@@ -2,8 +2,7 @@ import { connection } from "next/server"
 
 import { getCoachingCards, type CoachingCard } from "@/lib/coaching"
 import { getUpcomingSessions, type UpcomingSession } from "@/lib/coachingSessions"
-import { CRITERIA, type CriterionKey } from "@/lib/criteria"
-import { getOnboardingGoals } from "@/lib/goals"
+import { getCriterionTargets, type CriterionTarget } from "@/lib/goals"
 import { getPeerInvites, summarisePeerReviews, type PeerReviewSummary } from "@/lib/peerReviews"
 import { getRecordings, type Recording } from "@/lib/recordings"
 import { summariseReadiness, type Readiness } from "@/lib/scores"
@@ -11,8 +10,6 @@ import type { Viewer } from "@/lib/viewer"
 
 // What the executive's dashboard shows, gathered in one place so the page
 // makes a single call.
-
-export type CriterionTarget = { key: CriterionKey; label: string; goal: number }
 
 export type Dashboard = {
   /** Null until their first recording is scored. */
@@ -36,12 +33,7 @@ export async function getDashboard(viewer: Viewer): Promise<Dashboard> {
   // Per request: reminder timing and invite expiry depend on today.
   await connection()
   const now = new Date()
-  const [goals, recordings] = await Promise.all([getOnboardingGoals(), getRecordings(viewer.timeZone)])
-  const targets = CRITERIA.map(({ key, label }) => ({
-    key,
-    label,
-    goal: goals.find((goal) => goal.key === key)?.goal ?? 10,
-  }))
+  const [targets, recordings] = await Promise.all([getCriterionTargets(), getRecordings(viewer.timeZone)])
   return {
     readiness: summariseReadiness(recordings),
     recordings,

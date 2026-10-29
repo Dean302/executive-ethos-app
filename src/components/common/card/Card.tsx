@@ -62,7 +62,10 @@ function Card({
                 {title}
               </h2>
             )}
-            {description && <p className="text-muted-foreground mt-0.5 text-sm">{description}</p>}
+            {/* As in the design: a little closer when the header has an action slot (even an empty one), a little more room without. */}
+            {description && (
+              <p className={cn("text-muted-foreground text-sm", action !== undefined ? "mt-0.5" : "mt-1.5")}>{description}</p>
+            )}
           </div>
           {action && <div className="flex shrink-0">{action}</div>}
         </div>

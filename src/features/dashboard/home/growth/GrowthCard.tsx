@@ -6,7 +6,7 @@ import { RadarBreakdown } from "@/components/charts/RadarBreakdown"
 import { Card } from "@/components/common/card"
 import { Select } from "@/components/common/select"
 import { useSettling } from "@/hooks"
-import type { CriterionTarget } from "@/lib/dashboard"
+import type { CriterionTarget } from "@/lib/goals"
 import type { ScoredRecording } from "@/lib/scores"
 
 import { PERIODS, viewFor, type Period } from "./periods"
