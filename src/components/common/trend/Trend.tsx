@@ -5,13 +5,15 @@ import { cn } from "@/lib/utils"
 type TrendProps = {
   /** The change; null for a first entry with nothing before it. */
   value: number | null
+  /** Shown for no change. */
+  flatLabel?: string
   className?: string
 }
 
 /** A change since last time: green up, red down, "±0" flat, "First" with nothing to compare. */
-function Trend({ value, className }: TrendProps) {
+function Trend({ value, flatLabel = "±0", className }: TrendProps) {
   if (value === null) return <span className={cn("text-muted-foreground text-sm", className)}>First</span>
-  if (value === 0) return <span className={cn("text-muted-foreground text-sm", className)}>±0</span>
+  if (value === 0) return <span className={cn("text-muted-foreground text-sm", className)}>{flatLabel}</span>
   return (
     <span
       className={cn(

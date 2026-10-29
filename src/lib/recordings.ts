@@ -10,6 +10,20 @@ import type { CriterionScores, ScoredRecording } from "@/lib/scores"
 export const RECORDING_TYPES = ["1:1", "Team", "Executive", "Board", "Presentation", "Pitch", "Weekly"] as const
 export type RecordingType = (typeof RECORDING_TYPES)[number]
 
+/** How each meeting type is named and described wherever it's shown or chosen. */
+export const MEETING_TYPES: Record<RecordingType, { label: string; description: string }> = {
+  "1:1": { label: "1:1", description: "Individual check-ins, direct-report conversations" },
+  Team: { label: "Team / Weekly", description: "Team syncs, all-hands, weekly standups" },
+  Executive: { label: "Executive", description: "Leadership team, exec staff meetings" },
+  Board: { label: "Board Meeting", description: "Board updates, investor governance" },
+  Presentation: { label: "Presentation", description: "Keynotes, formal talks, product launches" },
+  Pitch: { label: "Pitch", description: "Investor pitches, sales conversations" },
+  Weekly: {
+    label: "Weekly Leadership Meeting",
+    description: "Your recurring leadership team meeting: priorities, scorecard, issues",
+  },
+}
+
 export type Recording = ScoredRecording & {
   id: string
   title: string

@@ -1,6 +1,7 @@
 import type { Recording } from "@/lib/recordings"
 
 import { RecordingsHeader } from "./header/RecordingsHeader"
+import { RecordingsTable } from "./list/RecordingsTable"
 import { TrendCard } from "./trend/TrendCard"
 
 type RecordingsScreenProps = {
@@ -20,6 +21,7 @@ function RecordingsScreen({ recordings, today }: RecordingsScreenProps) {
     <div className="mx-auto max-w-4xl">
       <RecordingsHeader recordings={recordings} />
       <TrendCard recordings={recordings} today={today} />
+      <RecordingsTable recordings={recordings} />
     </div>
   )
 }
