@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react"
 
 import { Card } from "@/components/common/card"
 import { Trend } from "@/components/common/trend"
-import type { DashboardRecording, RecordingType } from "@/lib/dashboard"
+import type { Recording, RecordingType } from "@/lib/recordings"
 import { cn } from "@/lib/utils"
 
 const SHOWN = 4
@@ -20,7 +20,7 @@ const TYPE_TONE: Record<RecordingType, string> = {
 }
 
 /** The latest recordings with their scores and changes, and the total count. */
-function RecentRecordings({ recordings, className }: { recordings: DashboardRecording[]; className?: string }) {
+function RecentRecordings({ recordings, className }: { recordings: Recording[]; className?: string }) {
   const count = recordings.length
   const shown = recordings.slice(0, SHOWN)
 

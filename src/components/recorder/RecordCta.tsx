@@ -66,10 +66,12 @@ type RecordCtaProps = {
   /** `onDark`: gold, for navy banners. `header`: the compact copy in the top bar. */
   variant?: "default" | "onDark" | "header"
   label?: string
+  /** Icon-only below sm (the label stays for screen readers), so a page header can keep it pinned while its title wraps. */
+  collapseOnMobile?: boolean
   className?: string
 }
 
-function RecordCta({ variant = "default", label = "Add a recording", className }: RecordCtaProps) {
+function RecordCta({ variant = "default", label = "Add a recording", collapseOnMobile = false, className }: RecordCtaProps) {
   const ref = React.useRef<HTMLDivElement>(null)
   const isHeader = variant === "header"
   useReportOnScreen(ref, !isHeader)
@@ -105,11 +107,12 @@ function RecordCta({ variant = "default", label = "Add a recording", className }
                 ? "bg-accent text-accent-foreground hover:bg-accent-hover px-5 py-3"
                 : isHeader
                   ? "bg-primary text-primary-foreground hover:bg-primary-hover h-9 px-3.5"
-                  : "bg-primary text-primary-foreground hover:bg-primary-hover px-4 py-2"
+                  : "bg-primary text-primary-foreground hover:bg-primary-hover px-4 py-2",
+              collapseOnMobile && "max-sm:h-9 max-sm:gap-1 max-sm:px-3"
             )}
           >
             <Mic aria-hidden className="size-4" strokeWidth={1.75} />
-            {label}
+            <span className={cn(collapseOnMobile && "max-sm:sr-only")}>{label}</span>
             <ChevronDown
               aria-hidden
               className="size-3.5 transition-transform group-data-popup-open:rotate-180"
